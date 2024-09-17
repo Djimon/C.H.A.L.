@@ -6,7 +6,7 @@
       "rolls": 1,
       "entries": [
         {
-          "name": "item:stone"
+          "name": "part:normal_arm"
         }
       ],
       "conditions": [
@@ -21,12 +21,12 @@
       "rolls": 2,
       "entries": [
         {
-          "name": "item:stone",
+          "name": "part:normal_arm",
           "weight": 50,
           "quantity": 1
         },
         {
-          "name": "item:dirt",
+          "name": "part:normal_arm",
           "weight": 10,
           "quantity": 5
         }

@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 
 public class LootDeserializer
 {
-    public LootTable LoadLootTable(TextAsset jsonFile)
+    public LootTable LoadLootTable(TextAsset jsonFile, ItemRegistry itemRegistry)
     {
         // Deserialize into the raw structure
         RawLootTable rawLootTable = JsonUtility.FromJson<RawLootTable>(jsonFile.text);
@@ -40,8 +41,19 @@ public class LootDeserializer
                     weight = rawEntry.weight,
                     quantity = rawEntry.quantity
                 };
+
                 entry.registerEntry();  // Parse the item type based on name
-                pool.entries.Add(entry);
+                //TODO: ignore if registryEntry detects invlaid item or Type
+
+                if(itemRegistry.IsItemKnown(entry.instanceName))
+                {
+                    pool.entries.Add(entry);
+                }
+                else
+                {
+                    Debug.LogWarning($"Item with name '{entry.instanceName}' doesn't exist.");
+                }
+             
             }
 
             // Process conditions

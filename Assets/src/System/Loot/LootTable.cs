@@ -92,7 +92,7 @@ public class Pool
 public enum EItemType
 {
     none =-1,
-    Item,
+    Part,
     PowerUp,
     Rune,
     //To be continues
@@ -105,6 +105,7 @@ public class Entry
     public int weight = 1; // Standardgewicht, falls nicht definiert
     public int quantity = 1; // Standardanzahl, falls nicht definiert
     public EItemType itemType;
+    public string instanceName;
 
     public void registerEntry()
     {
@@ -125,6 +126,11 @@ public class Entry
             itemType = EItemType.none;
             Debug.LogWarning($"Loot Entry has unknown ItemType '{split[0]}'. Entry will be ignored!");
         }
+
+        instanceName = split[1];
+
+        //TODO: Check if item exists
+
     }
 }
 

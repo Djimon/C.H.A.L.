@@ -6,10 +6,9 @@ using System.Linq;
 using UnityEngine;
 
 
-
-
 public class LootSystem : MonoBehaviour
 {
+    public ItemRegistry itemRegistry;
     private List<LootTable> lootTables;
 
     private void Awake()
@@ -37,7 +36,7 @@ public class LootSystem : MonoBehaviour
 
             //Debug.Log(file.text); //output the json-text
 
-            LootTable lt = deserializer.LoadLootTable(file);
+            LootTable lt = deserializer.LoadLootTable(file,itemRegistry);
             if (lt != null)
             {
                 lootTables.Add(lt);
@@ -76,7 +75,16 @@ public class LootSystem : MonoBehaviour
                 for (int i = 0; i < pool.rolls; i++)
                 {
                     Entry selectedItem = GetRandomPrecomputedItemFromPool(pool.referringPreComputedPool);
-                    Debug.Log($"Item Dropped: {selectedItem.name}, Quantity: {selectedItem.quantity}");
+                    Debug.Log($"looking for {selectedItem.name} ({selectedItem.instanceName}).");
+                    ScriptableItemBase item = itemRegistry.GetItemByName(selectedItem.instanceName);
+                    if (item != null)
+                    {
+                        Debug.Log($"Item Dropped: {selectedItem.name}, Quantity: {selectedItem.quantity}");
+                        Debug.Log($"Item Details: {item.GetItemDetails()}");
+
+                        //TODO: Add Item to inventory
+
+                    }  
 
                     //TODO: translate Entry into real Items an add them to inventory
                 }

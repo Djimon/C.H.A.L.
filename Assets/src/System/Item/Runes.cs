@@ -7,7 +7,7 @@ public class Rune : ItemBase
     public string Element { get; set; }  // e.g., Fire, Ice, Lightning
     public int Power { get; set; }
 
-    public Rune(string name, RarityLevel rarity, string image, string element, int power)
+    public Rune(string name, ERarityLevel rarity, Sprite image, string element, int power)
     {
         Name = name;
         Rarity = rarity;

@@ -1,4 +1,6 @@
 
+using UnityEngine;
+
 // Different item anchors for the "Part" category
 public enum EAnchorType
 {

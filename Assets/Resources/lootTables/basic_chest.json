@@ -1,0 +1,48 @@
+{
+  "type": "chest",
+  "pools": [
+    {
+	  "name": "normal",
+      "rolls": 1,
+      "entries": [
+        {
+          "name": "item:stone"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "random",
+          "chance": 1
+        }
+      ]
+    },
+    {
+	  "name": "rare",
+      "rolls": 2,
+      "entries": [
+        {
+          "name": "item:stone",
+          "weight": 50,
+          "quantity": 1
+        },
+        {
+          "name": "item:dirt",
+          "weight": 10,
+          "quantity": 5
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "time:night"
+        },
+		{
+          "condition": "mode:hard"
+        },
+		{
+		  "condition": "random",
+		  "chance": 0.5
+		}
+      ]
+    }
+  ]
+}

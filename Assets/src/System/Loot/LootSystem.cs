@@ -13,9 +13,14 @@ public class LootSystem : MonoBehaviour
 
     private void Awake()
     {
+        
+    }
+
+    private void Start()
+    {
         Initilize();
     }
-    
+
     // Start is called before the first frame update
     void Initilize()
     {

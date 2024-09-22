@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using UnityEditor.EditorTools;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Rendering;
 
 public enum EUnitSize
@@ -52,6 +53,9 @@ public abstract class Unit : MonoBehaviour
     public float AggroRadius { get; private set; } = 1;
 
     [SerializeField]
+    public float WalkingSpeed { get; private set; } = 1f;
+
+    [SerializeField]
     public EUnitSize UnitSize { get; private set; }
 
     [SerializeField]
@@ -71,9 +75,15 @@ public abstract class Unit : MonoBehaviour
     private Enemy[] EnemiesInAttackRange;
     private Enemy[] EnemiesKnownFromTeam;
 
+
+    private NavMeshAgent agent;
+    public Transform mainTarget; // Assign this in the Inspector
+    private Transform currentTarget;
+
     protected virtual void Awake()
     {
         troopManager = FindObjectOfType<TroopManager>();
+        agent = GetComponent<NavMeshAgent>();
     }
 
     protected virtual void OnEnable()
@@ -82,6 +92,10 @@ public abstract class Unit : MonoBehaviour
         {
             troopManager.RegisterUnit(this);
         }
+
+        currentTarget = mainTarget; // Start by moving towards the main target
+        agent.SetDestination(currentTarget.position);
+        Debug.Log($"Target locked: {currentTarget.position}");
     }
 
     protected virtual void OnDisable()
@@ -99,6 +113,22 @@ public abstract class Unit : MonoBehaviour
         AggroRadius = aggroRadius;
         UnitSize = size;
         updateInterval = interval;
+    }
+
+    void Update()
+    {
+        // Call the UpdateUnit method for layered update functionality
+        UpdateUnit();
+
+        //EnemiesInAggroDistance = DetectEnemies();
+
+        //// Wenn es Gegner gibt, wähle ein Ziel und bewege dich hin
+        //if (EnemiesInAggroDistance.Length > 0)
+        //{
+        //    target = GetTargetByGoal(EnemiesInAggroDistance);
+        //    MoveTo(target);
+        //}
+
     }
 
     public void UpdateUnit()
@@ -129,6 +159,11 @@ public abstract class Unit : MonoBehaviour
             _ => target = GetTargetByGoal(EnemiesInAggroDistance)
         };
 
+        if (target != null)
+        {
+            MoveTo(target);
+        }
+
         if (target!=null && CanAttack(target))
         {
             Attack(target);
@@ -142,7 +177,6 @@ public abstract class Unit : MonoBehaviour
     {
         //ToDo placeholder for other things a troop can share
         ShareSeenEnemies(EnemiesInAggroDistance,TeamNumber);
-        throw new NotImplementedException();
     }
 
     private void ShareSeenEnemies(Enemy[] enemiesInAggroDistance, int teamNumber)
@@ -153,19 +187,16 @@ public abstract class Unit : MonoBehaviour
 
     private void Attack(Transform target)
     {
-        //  -> can walk?
-        //  -> attack duration
-        //  -> 
-        throw new NotImplementedException();
+        // Placeholder: Implement attack logic here
+        Debug.Log($"{gameObject.name} is attacking {target.name}");
+        // Reduce health, trigger animations, etc.on();
     }
 
     private bool CanAttack(Transform target)
     {
-        //  -> If Cooldown -> false
-        //  -> If (ranged && target < range && target > minRange) true
-        //  -> ff (melee && target < meleerange) true
-        //  -> else false
-        throw new NotImplementedException();
+        // Placeholder: Implement logic to determine if the unit can attack
+        // For example, check cooldowns and ranges
+        return (cooldown <= 0); // Simplified check, needs more logic based on type of unit (melee/ranged)
     }
 
     private Transform GetTargetByGoal(Enemy[] enemies)
@@ -187,71 +218,61 @@ public abstract class Unit : MonoBehaviour
 
     private Transform GetBoss(Enemy[] enemies)
     {
-        Transform target = null;
-
-        //TODO: implement
-
-        if (target == null)
-        {
-            target = GetNearestTarget(enemies);
-        }
-
-        return target;
+        Transform target = enemies.FirstOrDefault(e => e.isBoss).transform;
+        return target ?? GetNearestTarget(enemies);
     }
 
     private Transform GetTargetBasedOnArmor(Enemy[] enemies)
     {
-        Transform target = null;
-
-        //TODO: implement
-
-        if (target == null)
-        {
-            target = GetNearestTarget(enemies);
-        }
-
+        Transform target = enemies.OrderByDescending(enemy => enemy.currentArmor).FirstOrDefault().transform;
+        return target ?? GetNearestTarget(enemies);
         return target;
     }
 
     private Transform GetTargetBasedOnLife(Enemy[] enemies, string v)
     {
-        Transform target = null;
-
-        target = v switch
+        Transform target = v switch
         {
-            "high" => enemies.OrderByDescending(enemy => enemy.currentHealth).ToArray()[0].transform,
-            "low" => enemies.OrderBy(enemy => enemy.currentHealth).ToArray()[0].transform,
-            _ => target
+            "high" => enemies.OrderByDescending(enemy => enemy.currentHealth).FirstOrDefault().transform,
+            "low" => enemies.OrderBy(enemy => enemy.currentHealth).FirstOrDefault().transform,
+            _ => null
         };
 
-
-        if (target == null)
-        {
-            target = GetNearestTarget(enemies);
-        }
-
-        return target;
+        return target ?? GetNearestTarget(enemies);
     }
 
     private Transform GetNearestTarget(Enemy[] enemies)
     {
-        throw new NotImplementedException();
+        Transform target = enemies.OrderBy(enemy => enemy.distance).FirstOrDefault().transform;
+        return target;
     }
 
     protected Enemy[] DetectEnemies()
     {
-        //TODO implement
-        //physics.OverlapSphere
-
-        // Check if found Entities is are different Team
-        
-        
-        throw new NotImplementedException();
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, AggroRadius);
+        return hitColliders
+            .Where(collider => collider.CompareTag("Entity") && collider.transform != this.transform)
+            .Select(collider => new Enemy
+            {
+                transform = collider.transform,
+                distance = Vector3.Distance(transform.position, collider.transform.position),
+                currentHealth = collider.GetComponent<Unit>()?.MaxHealth ?? 0,
+                isBoss = collider.GetComponent<Unit>()?.UnitSize == EUnitSize.huge // Example condition for boss
+            }).ToArray(); ;
     }
 
     private void MoveTo(Transform target)
     {
-       
+        if (target != null)
+        {
+            agent.SetDestination(target.position);
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, AggroRadius);
     }
 
 }

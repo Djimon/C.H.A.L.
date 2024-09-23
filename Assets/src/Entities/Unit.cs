@@ -277,6 +277,9 @@ public abstract class Unit : MonoBehaviour
         // Do we have piercing bonus?
         target.GetComponent<Unit>()?.DealDamage(dmg);
 
+        //TODO get cooldown intellgient
+        cooldown = 3f;
+
     }
 
     private float CalculateDamageDealt()

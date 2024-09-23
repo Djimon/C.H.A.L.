@@ -1,0 +1,84 @@
+Sortierung 1
+
+BASIC
+- Gliedmaßen
+- Kralle
+- Zunge
+- Auge
+- Zahn
+
+-> Überreste: Asche
+
+CHITINOID
+- Chitinpanzer
+- Drüse
+- Kapsel
+- Fühler
+- Stachel
+
+Spezial: Stachel, Kieferzange
+
+-> Überreste: Glitzerstaub
+
+REPTILOID
+- Schuppe
+- Hornhaut
+- Sekret
+- Schleim
+- Knochenfragment
+- Hornhaut
+
+Spezial: Giftzahn, Giftbeutel
+
+-> Überreste: Tränen
+
+BESTIOID
+- Fell
+- Klauen
+- Leder
+- Knochen
+
+Spezial: Gehörn
+
+-> Überreste: Blut
+
+
+Alt: 2. Sortierung 
+I. Klein
+========
+I.I. Insekten
+- Chitinpanzer
+- Drüse
+- Kapsel
+- Fühler
+- Kieferzange
+- Horn
+- Gliedmaßen
+- Kralle
+- Flügel
+-> Asche
+
+I.II. Reptilien
+- Schuppe
+- Giftzahn
+- Giftbeutel
+- Zunge
+- Schleim
+- Auge
+- Knochenfragment
+- Hornhaut
+- Sekret
+-> Glitzerstaub
+
+I.III große
+- Membran
+- Stachel
+- Fell
+- Klauen
+- Zahn
+- Leder
+- Feder
+- Splitter
+- Hornplatte
+- Knochen
+-> Tränen

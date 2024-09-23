@@ -8,7 +8,7 @@ public class RangeUnit : Unit
     protected override void Awake()
     {
         base.Awake();
-        Createunit(MaxHealth, CurrentHealth, AggroRadius, UnitSize, updateInterval);
+        Createunit(MaxHealth, CurrentHealth, Armor, AggroRadius, UnitSize, updateInterval);
     }
 
     // Start is called before the first frame update
@@ -20,6 +20,6 @@ public class RangeUnit : Unit
     // Update is called once per frame
     void Update()
     {
-        
+        UpdateUnit();
     }
 }

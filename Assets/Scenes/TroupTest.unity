@@ -570,7 +570,7 @@ GameObject:
   - component: {fileID: 967036278}
   - component: {fileID: 967036277}
   - component: {fileID: 967036276}
-  - component: {fileID: 967036275}
+  - component: {fileID: 967036280}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Entity
@@ -593,21 +593,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1644041413}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &967036275
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 967036273}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cdad3ad8f8b870e44b9054f7ff9f7953, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mainTarget: {fileID: 1920145480}
-  aggroRadius: 7
-  TeamNumber: 2
 --- !u!195 &967036276
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -703,6 +688,26 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 967036273}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &967036280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 967036273}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d3b9262915a9b3439538d353bcf8063, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MaxHealth: 100
+  CurrentHealth: 100
+  AggroRadius: 7
+  WalkingSpeed: 2
+  UnitSize: 1
+  CombatFocus: 0
+  TeamNumber: 2
+  mainTarget: {fileID: 1920145480}
 --- !u!1 &1061685562
 GameObject:
   m_ObjectHideFlags: 0
@@ -1718,8 +1723,8 @@ GameObject:
   - component: {fileID: 2116261700}
   - component: {fileID: 2116261699}
   - component: {fileID: 2116261698}
-  - component: {fileID: 2116261702}
   - component: {fileID: 2116261703}
+  - component: {fileID: 2116261704}
   m_Layer: 0
   m_Name: Player 1
   m_TagString: Entity
@@ -1815,21 +1820,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1644041413}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2116261702
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2116261697}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cdad3ad8f8b870e44b9054f7ff9f7953, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mainTarget: {fileID: 607464776}
-  aggroRadius: 15
-  TeamNumber: 1
 --- !u!195 &2116261703
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1852,6 +1842,26 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &2116261704
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2116261697}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d3b9262915a9b3439538d353bcf8063, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MaxHealth: 200
+  CurrentHealth: 200
+  AggroRadius: 15
+  WalkingSpeed: 2
+  UnitSize: 1
+  CombatFocus: 0
+  TeamNumber: 1
+  mainTarget: {fileID: 607464776}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

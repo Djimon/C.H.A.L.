@@ -24,6 +24,14 @@ public enum ECombatFocus
     Boss
 }
 
+public enum EDamageType
+{
+    normal = 1,
+    fire,
+    cold,
+    lightning
+}
+
 public struct Enemy
 {
     public Transform transform;
@@ -40,26 +48,41 @@ public abstract class Unit : MonoBehaviour
 
     // New properties for layered update
     [SerializeField]
-    public float updateInterval { get; private set; } = 1f; // Time in seconds between updates
+    public float updateInterval { get; set; } = 2f; // Time in seconds between updates
     private float lastUpdateTime = 0f; // Time of last update
 
     [SerializeField]
-    public float MaxHealth { get; private set; } = 0;
+    public float MaxHealth = 0;
 
     [SerializeField]
-    public float CurrentHealth { get; private set; } = 0;
+    public float CurrentHealth = 0;
+
+    [SerializeField] 
+    public float AttackPower = 0;
+
+    [SerializeField] 
+    public float Armor = 0;
 
     [SerializeField]
-    public float AggroRadius { get; private set; } = 1;
+    public float FireResistance = 0;
 
     [SerializeField]
-    public float WalkingSpeed { get; private set; } = 1f;
+    public float ColdResistance = 0;
 
     [SerializeField]
-    public EUnitSize UnitSize { get; private set; }
+    public float LightningResistance = 0;
 
     [SerializeField]
-    public ECombatFocus CombatFocus { get; set; }
+    public float AggroRadius = 1;
+
+    [SerializeField]
+    public float WalkingSpeed = 1f;
+
+    [SerializeField]
+    public EUnitSize UnitSize = EUnitSize.unkown;
+
+    [SerializeField]
+    public ECombatFocus CombatFocus = ECombatFocus.unkown;
 
     [SerializeField]
     public int TeamNumber = 0;
@@ -70,7 +93,7 @@ public abstract class Unit : MonoBehaviour
 
     private float MeleeCooldown = 0f;
     private float RangeCooldown = 0f;
-    private Transform target;
+    
     private Enemy[] EnemiesInAggroDistance;
     private Enemy[] EnemiesInAttackRange;
     private Enemy[] EnemiesKnownFromTeam;
@@ -79,6 +102,7 @@ public abstract class Unit : MonoBehaviour
     private NavMeshAgent agent;
     public Transform mainTarget; // Assign this in the Inspector
     private Transform currentTarget;
+    private Transform newtarget;
 
     protected virtual void Awake()
     {
@@ -106,10 +130,11 @@ public abstract class Unit : MonoBehaviour
         }
     }
 
-    protected void Createunit(float maxHealth, float currentHealth, float aggroRadius, EUnitSize size, float interval)
+    protected void Createunit(float maxHealth, float currentHealth, float armor, float aggroRadius, EUnitSize size, float interval)
     {
         MaxHealth = maxHealth;
         CurrentHealth = currentHealth;
+        Armor = armor;
         AggroRadius = aggroRadius;
         UnitSize = size;
         updateInterval = interval;
@@ -151,25 +176,30 @@ public abstract class Unit : MonoBehaviour
         EnemiesInAggroDistance = DetectEnemies();
 
         int foundEnemies = EnemiesInAggroDistance.Length;
+        Debug.Log($"found {foundEnemies} enemies.");
 
-        target = foundEnemies switch
+        newtarget = foundEnemies switch
         {
             0 => null,
-            1 => target = EnemiesInAggroDistance[0].transform,
-            _ => target = GetTargetByGoal(EnemiesInAggroDistance)
+            1 => newtarget = EnemiesInAggroDistance[0].transform,
+            _ => newtarget = GetTargetByGoal(EnemiesInAggroDistance)
         };
 
-        if (target != null)
+        if (newtarget != null && newtarget != currentTarget)
         {
-            MoveTo(target);
+            currentTarget = newtarget;
+            MoveTo(currentTarget);
         }
 
-        if (target!=null && CanAttack(target))
+        if (currentTarget!=null && CanAttack(currentTarget))
         {
-            Attack(target);
+            Attack(currentTarget);
         }
 
-        Communicate();       
+        if (foundEnemies != 0)
+        {
+            Communicate();
+        }
 
     }
 
@@ -185,11 +215,74 @@ public abstract class Unit : MonoBehaviour
         throw new NotImplementedException();
     }
 
+    public void DealDamage(float dmg, EDamageType type=EDamageType.normal, float piercing =0f)
+    {
+        float damageAfterArmor = CalculateArmorAbsorbtion(dmg, type, ref piercing);
+
+        SubstractHealth(damageAfterArmor);
+    }
+
+    private float CalculateArmorAbsorbtion(float dmg, EDamageType type, ref float piercing)
+    {
+        piercing = Mathf.Clamp(piercing, 0f, 1f);
+        float effectiveArmor = Armor;
+        // Je 10 Puntke Armor, wird 1 Schaden absorbiert
+        float damageAfterArmor = dmg;
+
+        float resistance = type switch
+        {
+            EDamageType.normal => Armor,
+            EDamageType.fire => FireResistance,
+            EDamageType.cold => ColdResistance,
+            EDamageType.lightning => LightningResistance,
+            _ => Armor
+        };
+
+        //Rüstungsdruchdringung abziehen
+        effectiveArmor = resistance * (1 - piercing);
+        // Je 10 Puntke Armor, wird 1 Schaden absorbiert
+        damageAfterArmor = Mathf.Max(0f, dmg - (effectiveArmor / 10));
+        return damageAfterArmor;
+    }
+
+    private void SubstractHealth(float damageAfterArmor)
+    {
+        CurrentHealth -= damageAfterArmor;
+        if(CurrentHealth < 0f) 
+        {
+            CurrentHealth = 0f;
+            Die();
+        }
+    }
+
+    private void AddHealth(float health)
+    {
+        CurrentHealth += health;
+    }
+
+    private void Die()
+    {
+        Debug.Log($"{this.name} died!");
+        //TODO: Refactor UnitPools
+        Destroy(gameObject);
+    }
+
     private void Attack(Transform target)
     {
         // Placeholder: Implement attack logic here
         Debug.Log($"{gameObject.name} is attacking {target.name}");
         // Reduce health, trigger animations, etc.on();
+        float dmg = CalculateDamageDealt();
+        //TODO: What dmage-type do we have?
+        // Do we have piercing bonus?
+        target.GetComponent<Unit>()?.DealDamage(dmg);
+
+    }
+
+    private float CalculateDamageDealt()
+    {
+        float bonusDamage = 0; //active Runes
+        return AttackPower += bonusDamage;
     }
 
     private bool CanAttack(Transform target)
@@ -250,13 +343,15 @@ public abstract class Unit : MonoBehaviour
     protected Enemy[] DetectEnemies()
     {
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, AggroRadius);
+        //Debug.Log($"Hit: {hitColliders[0].name} at {hitColliders[0].transform.position} ");
         return hitColliders
-            .Where(collider => collider.CompareTag("Entity") && collider.transform != this.transform)
+            .Where(collider => collider.CompareTag("Entity") && collider.transform != transform && TeamNumber != collider.GetComponent<Unit>()?.TeamNumber)
             .Select(collider => new Enemy
             {
                 transform = collider.transform,
                 distance = Vector3.Distance(transform.position, collider.transform.position),
                 currentHealth = collider.GetComponent<Unit>()?.MaxHealth ?? 0,
+                currentArmor = collider.GetComponent<Unit>()?.Armor ?? 0,
                 isBoss = collider.GetComponent<Unit>()?.UnitSize == EUnitSize.huge // Example condition for boss
             }).ToArray(); ;
     }
@@ -266,6 +361,7 @@ public abstract class Unit : MonoBehaviour
         if (target != null)
         {
             agent.SetDestination(target.position);
+            Debug.Log($"Set new target: {target.name} at {target.position}");
         }
     }
 

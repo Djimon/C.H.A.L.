@@ -7,7 +7,7 @@ public class MeleeUnit : Unit
     protected override void Awake()
     {
         base.Awake();
-        Createunit(MaxHealth, CurrentHealth, AggroRadius, UnitSize, updateInterval);
+        Createunit(MaxHealth, CurrentHealth, Armor, AggroRadius, UnitSize, updateInterval);
     }
 
     // Start is called before the first frame update
@@ -19,6 +19,6 @@ public class MeleeUnit : Unit
     // Update is called once per frame
     void Update()
     {
-        
+        base.UpdateUnit();
     }
 }

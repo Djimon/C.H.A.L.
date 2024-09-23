@@ -159,7 +159,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -381,6 +381,50 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 0, z: 0}
   m_TimeToStationary: 0.5
+--- !u!1 &525260253
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 525260255}
+  - component: {fileID: 525260254}
+  m_Layer: 0
+  m_Name: TroopMnager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &525260254
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 525260253}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae7aa0b403cb2684c96b87c489d46286, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &525260255
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 525260253}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.6029682, y: 2.9043999, z: -12.059371}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &528844369
 GameObject:
   m_ObjectHideFlags: 0
@@ -700,14 +744,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d3b9262915a9b3439538d353bcf8063, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxHealth: 100
-  CurrentHealth: 100
-  AggroRadius: 7
+  MaxHealth: 160
+  CurrentHealth: 160
+  AttackPower: 100
+  AttackRange: 20
+  Armor: 0
+  FireResistance: 0
+  ColdResistance: 0
+  LightningResistance: 0
+  AggroRadius: 12
   WalkingSpeed: 2
   UnitSize: 1
   CombatFocus: 0
   TeamNumber: 2
   mainTarget: {fileID: 1920145480}
+  MeleeCooldown: 2
 --- !u!1 &1061685562
 GameObject:
   m_ObjectHideFlags: 0
@@ -1856,12 +1907,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxHealth: 200
   CurrentHealth: 200
-  AggroRadius: 15
-  WalkingSpeed: 2
+  AttackPower: 120
+  AttackRange: 20
+  Armor: 30
+  FireResistance: 0
+  ColdResistance: 0
+  LightningResistance: 0
+  AggroRadius: 20
+  WalkingSpeed: 4
   UnitSize: 1
   CombatFocus: 0
   TeamNumber: 1
   mainTarget: {fileID: 607464776}
+  MeleeCooldown: 2
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1870,3 +1928,4 @@ SceneRoots:
   - {fileID: 1317875708}
   - {fileID: 528844370}
   - {fileID: 1644041413}
+  - {fileID: 525260255}

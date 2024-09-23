@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class MeleeUnit : Unit
 {
+
+    //TODO: Get rid of MAgic Cosntants
+    public float MeleeCooldown = 2f;
+    
     protected override void Awake()
     {
         base.Awake();
@@ -19,6 +23,17 @@ public class MeleeUnit : Unit
     // Update is called once per frame
     void Update()
     {
-        base.UpdateUnit();
+        //UpdateUnit(); //the TroopManager does this
+    }
+
+    protected override void Attack()
+    {
+        base.Attack();
+        Invoke(nameof(ResetAttack), MeleeCooldown); //3 Sekunden Cooldown
+    }
+
+    private void ResetAttack()
+    {
+        canAttack = true;
     }
 }

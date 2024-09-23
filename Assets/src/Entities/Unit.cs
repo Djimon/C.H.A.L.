@@ -4,6 +4,7 @@ using UnityEditor.EditorTools;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Rendering;
+using static UnityEngine.GraphicsBuffer;
 
 public enum EUnitSize
 {
@@ -48,7 +49,7 @@ public abstract class Unit : MonoBehaviour
 
     // New properties for layered update
     [SerializeField]
-    public float updateInterval { get; set; } = 2f; // Time in seconds between updates
+    public float updateInterval { get; set; } = 1f; // Time in seconds between updates. should not be greater than 1!!
     private float lastUpdateTime = 0f; // Time of last update
 
     [SerializeField]
@@ -59,6 +60,9 @@ public abstract class Unit : MonoBehaviour
 
     [SerializeField] 
     public float AttackPower = 0;
+
+    [SerializeField]
+    public float AttackRange = 1; //10-20 good base Measure for melee
 
     [SerializeField] 
     public float Armor = 0;
@@ -88,18 +92,15 @@ public abstract class Unit : MonoBehaviour
     public int TeamNumber = 0;
 
 
-    private bool canWalk = true ;
-    private float cooldown = 0f;
-
-    private float MeleeCooldown = 0f;
-    private float RangeCooldown = 0f;
-    
+    protected bool canWalk = true ;
+    protected bool canAttack = true;
+    [SerializeField]
+   
     private Enemy[] EnemiesInAggroDistance;
     private Enemy[] EnemiesInAttackRange;
     private Enemy[] EnemiesKnownFromTeam;
 
-
-    private NavMeshAgent agent;
+    protected NavMeshAgent agent;
     public Transform mainTarget; // Assign this in the Inspector
     private Transform currentTarget;
     private Transform newtarget;
@@ -108,6 +109,7 @@ public abstract class Unit : MonoBehaviour
     {
         troopManager = FindObjectOfType<TroopManager>();
         agent = GetComponent<NavMeshAgent>();
+        agent.speed = WalkingSpeed;
     }
 
     protected virtual void OnEnable()
@@ -144,16 +146,6 @@ public abstract class Unit : MonoBehaviour
     {
         // Call the UpdateUnit method for layered update functionality
         UpdateUnit();
-
-        //EnemiesInAggroDistance = DetectEnemies();
-
-        //// Wenn es Gegner gibt, wähle ein Ziel und bewege dich hin
-        //if (EnemiesInAggroDistance.Length > 0)
-        //{
-        //    target = GetTargetByGoal(EnemiesInAggroDistance);
-        //    MoveTo(target);
-        //}
-
     }
 
     public void UpdateUnit()
@@ -185,15 +177,22 @@ public abstract class Unit : MonoBehaviour
             _ => newtarget = GetTargetByGoal(EnemiesInAggroDistance)
         };
 
+        if (currentTarget = null)
+        {
+            currentTarget = mainTarget;
+        }
+
         if (newtarget != null && newtarget != currentTarget)
         {
             currentTarget = newtarget;
-            MoveTo(currentTarget);
         }
+        
+
+        MoveTo(currentTarget);
 
         if (currentTarget!=null && CanAttack(currentTarget))
         {
-            Attack(currentTarget);
+            Attack();
         }
 
         if (foundEnemies != 0)
@@ -211,13 +210,15 @@ public abstract class Unit : MonoBehaviour
 
     private void ShareSeenEnemies(Enemy[] enemiesInAggroDistance, int teamNumber)
     {
-        //populate all enemies in AggroDistance to other TeamMembers
-        throw new NotImplementedException();
+        //populate all enemies in AggroDistance to other TeamMembers in range
+        Debug.Log("Existance of Enemies has been shared");
+        //throw new NotImplementedException();
     }
 
     public void DealDamage(float dmg, EDamageType type=EDamageType.normal, float piercing =0f)
     {
         float damageAfterArmor = CalculateArmorAbsorbtion(dmg, type, ref piercing);
+        Debug.Log($"{gameObject.name} lost {damageAfterArmor} healtpoints.");
 
         SubstractHealth(damageAfterArmor);
     }
@@ -248,7 +249,7 @@ public abstract class Unit : MonoBehaviour
     private void SubstractHealth(float damageAfterArmor)
     {
         CurrentHealth -= damageAfterArmor;
-        if(CurrentHealth < 0f) 
+        if(CurrentHealth <= 0f) 
         {
             CurrentHealth = 0f;
             Die();
@@ -263,37 +264,42 @@ public abstract class Unit : MonoBehaviour
     private void Die()
     {
         Debug.Log($"{this.name} died!");
+        troopManager.UnregisterUnit(this);
         //TODO: Refactor UnitPools
         Destroy(gameObject);
     }
 
-    private void Attack(Transform target)
+    protected virtual void Attack()
     {
         // Placeholder: Implement attack logic here
-        Debug.Log($"{gameObject.name} is attacking {target.name}");
         // Reduce health, trigger animations, etc.on();
-        float dmg = CalculateDamageDealt();
+        float dmg = CalculateDamageDealt();  
+        Debug.Log($"{gameObject.name} attacked {currentTarget.name} with {dmg} damage");
         //TODO: What dmage-type do we have?
         // Do we have piercing bonus?
-        target.GetComponent<Unit>()?.DealDamage(dmg);
-
-        //TODO get cooldown intellgient
-        cooldown = 3f;
+        // TODO: Chekcen ob meelee oder Range
+        currentTarget.GetComponent<Unit>()?.DealDamage(dmg);
+        canAttack = false;
 
     }
 
     private float CalculateDamageDealt()
     {
         float bonusDamage = 0; //active Runes
-        return AttackPower += bonusDamage;
+        return AttackPower/10 + bonusDamage;
     }
 
-    private bool CanAttack(Transform target)
+    protected bool CanAttack(Transform target)
     {
-        // Placeholder: Implement logic to determine if the unit can attack
-        // For example, check cooldowns and ranges
-        return (cooldown <= 0); // Simplified check, needs more logic based on type of unit (melee/ranged)
+        bool result = false;
+        //Already claculated once in EnemiesInAggroDistance
+        float distance = Vector3.Distance(transform.position, target.position);
+        result = distance < AttackRange;
+        result &= canAttack;
+
+        return result;
     }
+
 
     private Transform GetTargetByGoal(Enemy[] enemies)
     {
@@ -322,7 +328,6 @@ public abstract class Unit : MonoBehaviour
     {
         Transform target = enemies.OrderByDescending(enemy => enemy.currentArmor).FirstOrDefault().transform;
         return target ?? GetNearestTarget(enemies);
-        return target;
     }
 
     private Transform GetTargetBasedOnLife(Enemy[] enemies, string v)
@@ -364,7 +369,7 @@ public abstract class Unit : MonoBehaviour
         if (target != null)
         {
             agent.SetDestination(target.position);
-            Debug.Log($"Set new target: {target.name} at {target.position}");
+            //Debug.Log($"Set new target: {target.name} at {target.position}");
         }
     }
 

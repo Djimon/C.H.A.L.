@@ -747,7 +747,7 @@ MonoBehaviour:
   MaxHealth: 160
   CurrentHealth: 160
   AttackPower: 100
-  AttackRange: 20
+  AttackRange: 10
   Armor: 0
   FireResistance: 0
   ColdResistance: 0
@@ -1908,7 +1908,7 @@ MonoBehaviour:
   MaxHealth: 200
   CurrentHealth: 200
   AttackPower: 120
-  AttackRange: 20
+  AttackRange: 10
   Armor: 30
   FireResistance: 0
   ColdResistance: 0

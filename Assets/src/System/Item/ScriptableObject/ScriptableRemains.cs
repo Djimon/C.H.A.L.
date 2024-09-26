@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NewPowerUp", menuName = "Items/PowerUp")]
+[CreateAssetMenu(fileName = "NewPowerUp", menuName = "Items/Remains")]
 public class ScriptablePowerUp : ScriptableItemBase
 {
     public string effectText;

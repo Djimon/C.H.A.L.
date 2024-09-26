@@ -10,7 +10,7 @@ public enum EPowerUpType
 }
 
 // Specific class for items in the "PowerUp" category
-public class PowerUp : ItemBase
+public class Remains : ItemBase
 {
     public string Text { get; set; }
     public float Value { get; set; }
@@ -19,7 +19,7 @@ public class PowerUp : ItemBase
     public EPowerUpType PowerUpType { get; set; }
 
     // Constructor
-    public PowerUp(string name, ERarityLevel rarity, Sprite image, EPowerUpType type, string text, float value, float time)
+    public Remains(string name, ERarityLevel rarity, Sprite image, EPowerUpType type, string text, float value, float time)
     {
         Name = name;
         Rarity = rarity;

@@ -1,0 +1,29 @@
+{
+  "Rarities": [
+    {
+      "rarity": "Common",
+      "priceMultiplier": 1.0,
+      "dnaMultiplier": 1.0
+    },
+    {
+      "rarity": "Uncommon",
+      "priceMultiplier": 1.5,
+      "dnaMultiplier": 1.2
+    },
+    {
+      "rarity": "Rare",
+      "priceMultiplier": 2.0,
+      "dnaMultiplier": 1.5
+    },
+    {
+      "rarity": "Epic",
+      "priceMultiplier": 3.0,
+      "dnaMultiplier": 2.0
+    },
+    {
+      "rarity": "Legendary",
+      "priceMultiplier": 5.0,
+      "dnaMultiplier": 3.0
+    }
+  ]
+}

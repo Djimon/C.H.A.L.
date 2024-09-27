@@ -396,7 +396,7 @@ GameObject:
   - component: {fileID: 513633597}
   - component: {fileID: 513633596}
   m_Layer: 0
-  m_Name: Enemy 2
+  m_Name: Thorsten
   m_TagString: Entity
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -433,7 +433,7 @@ MonoBehaviour:
   MaxHealth: 160
   CurrentHealth: 160
   AttackPower: 100
-  AttackRange: 10
+  AttackRange: 2
   Armor: 0
   FireResistance: 0
   ColdResistance: 0
@@ -442,6 +442,7 @@ MonoBehaviour:
   WalkingSpeed: 2
   UnitSize: 1
   CombatFocus: 0
+  MonsterType: -1
   TeamNumber: 2
   mainTarget: {fileID: 1920145480}
   MeleeCooldown: 2
@@ -731,7 +732,7 @@ GameObject:
   - component: {fileID: 967036276}
   - component: {fileID: 967036280}
   m_Layer: 0
-  m_Name: Enemy
+  m_Name: Jeremiah
   m_TagString: Entity
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -863,7 +864,7 @@ MonoBehaviour:
   MaxHealth: 160
   CurrentHealth: 120
   AttackPower: 100
-  AttackRange: 10
+  AttackRange: 2
   Armor: 0
   FireResistance: 0
   ColdResistance: 0
@@ -872,6 +873,7 @@ MonoBehaviour:
   WalkingSpeed: 2
   UnitSize: 1
   CombatFocus: 0
+  MonsterType: -1
   TeamNumber: 2
   mainTarget: {fileID: 1920145480}
   MeleeCooldown: 2
@@ -1954,7 +1956,7 @@ GameObject:
   - component: {fileID: 2030095113}
   - component: {fileID: 2030095112}
   m_Layer: 0
-  m_Name: Player 2
+  m_Name: Bianca
   m_TagString: Entity
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1991,7 +1993,7 @@ MonoBehaviour:
   MaxHealth: 200
   CurrentHealth: 150
   AttackPower: 120
-  AttackRange: 10
+  AttackRange: 2
   Armor: 60
   FireResistance: 0
   ColdResistance: 0
@@ -2000,6 +2002,7 @@ MonoBehaviour:
   WalkingSpeed: 2
   UnitSize: 1
   CombatFocus: 2
+  MonsterType: -1
   TeamNumber: 1
   mainTarget: {fileID: 607464776}
   MeleeCooldown: 2
@@ -2113,7 +2116,7 @@ GameObject:
   - component: {fileID: 2116261703}
   - component: {fileID: 2116261704}
   m_Layer: 0
-  m_Name: Player 1
+  m_Name: Bob
   m_TagString: Entity
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2245,7 +2248,7 @@ MonoBehaviour:
   MaxHealth: 200
   CurrentHealth: 200
   AttackPower: 120
-  AttackRange: 10
+  AttackRange: 2
   Armor: 30
   FireResistance: 0
   ColdResistance: 0
@@ -2254,6 +2257,7 @@ MonoBehaviour:
   WalkingSpeed: 4
   UnitSize: 1
   CombatFocus: 0
+  MonsterType: -1
   TeamNumber: 1
   mainTarget: {fileID: 607464776}
   MeleeCooldown: 2

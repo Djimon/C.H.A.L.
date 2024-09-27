@@ -12,7 +12,7 @@ public class MeleeAttackStrategy : IAttackSet
 {
     public void Attack()
     {
-        Console.WriteLine($"Nahkampfangriff.");
+        Debug.Log("Nahkampfangriff.");
     }
 }
 
@@ -20,6 +20,6 @@ public class RangedAttackStrategy : IAttackSet
 {
     public void Attack()
     {
-        Console.WriteLine($"Fernkampfangriff mit.");
+        Debug.Log($"Fernkampfangriff mit.");
     }
 }

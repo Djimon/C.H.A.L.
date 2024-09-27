@@ -46,8 +46,8 @@ public enum EMonsterType
 
 public struct Enemy
 {
-    public Transform transform;
-    public float distance;
+    public Transform Transform;
+    public float Distance;
     public float currentHealth;
     public float currentArmor;
     public bool isBoss;
@@ -55,8 +55,8 @@ public struct Enemy
 
 public struct Ally
 {
-    public Transform transform;
-    public float distance;
+    public Transform Transform;
+    public float Distance;
     public float currentHealth;
     public float currentArmor;
 }
@@ -133,7 +133,7 @@ public abstract class Unit : MonoBehaviour
     private List<Enemy> EnemiesInAggroDistance;
     private List<Enemy> EnemiesInAttackRange;
     [SerializeField]
-    public List<Enemy> EnemiesKnown;
+    private List<Enemy> EnemiesKnown;
     private List<Ally> AlliesInRange;
 
     protected NavMeshAgent agent;
@@ -228,25 +228,18 @@ public abstract class Unit : MonoBehaviour
         int knownEnemies = 0;
         if (EnemiesKnown != null)
         {
-            UpdateKnownEnemies();
+            EnemiesKnown = UpdateKnownEnemies();
             knownEnemies = EnemiesKnown.Count;
         }        
         
-
-        //BUG: If first target dies, changed to main target and never changed back, evne if Enemie stays Known
         newtarget = knownEnemies switch
         {
             0 => newtarget = mainTarget,
-            1 => newtarget = EnemiesKnown[0].transform,
-            _ => newtarget = GetTargetByGoal(EnemiesKnown)
+            1 => newtarget = EnemiesKnown[0].Transform,
+            _ => newtarget = GetTargetByGoal() //BUG TODO: Seems to not be called everytime?
         };
 
-        //if (currentTarget == null)
-        //{
-        //    currentTarget = mainTarget;
-        //}
-
-        if (newtarget != null && newtarget != currentTarget)
+        if (newtarget != currentTarget)
         {
             currentTarget = newtarget;
             Debug.Log($"{this.name} changed target to {newtarget.name} ({CombatFocus})");
@@ -260,39 +253,39 @@ public abstract class Unit : MonoBehaviour
             Attack();
         }
 
-        if (foundEnemies != 0)
+        if (knownEnemies > 0)
         {
             Communicate();
         }
 
     }
 
-    private void UpdateKnownEnemies()
+    private List<Enemy> UpdateKnownEnemies()
     {
         List<Enemy> enemyList = new List<Enemy>(EnemiesKnown);
         for (int i = 0; i < enemyList.Count; i++) 
         { 
             Enemy enemy = EnemiesKnown[i];
-            if (enemy.transform == null)
+            if (enemy.Transform == null)
             {
                 enemyList.Remove(enemy);
                 continue;
             }
-            enemy.distance = Vector3.Distance(transform.position, enemy.transform.position);
-            enemy.currentHealth = enemy.transform.GetComponent<Unit>().CurrentHealth;
-            enemy.currentArmor = enemy.transform.GetComponent<Unit>().Armor;
-            Debug.Log($"known: {enemy.transform.gameObject.name} with distance {enemy.distance} at {enemy.currentHealth} HP");
+            enemy.Distance = Vector3.Distance(transform.position, enemy.Transform.position);
+            enemy.currentHealth = enemy.Transform.GetComponent<Unit>().CurrentHealth;
+            enemy.currentArmor = enemy.Transform.GetComponent<Unit>().Armor;
+            Debug.Log($"{name} knows: {enemy.Transform.gameObject.name} with distance {enemy.Distance} at {enemy.currentHealth} HP");
         }
-        EnemiesKnown = enemyList;
+        return new List<Enemy>(enemyList);
     }
 
     private void Communicate()
     {
         foreach(Ally ally in AlliesInRange)
         {
-            if (ally.transform != null)
+            if (ally.Transform != null)
             { 
-                Unit unit = ally.transform.GetComponent<Unit>();
+                Unit unit = ally.Transform.GetComponent<Unit>();
                 if (unit != null)
                 {
                     unit.ShareSeenEnemies(EnemiesInAggroDistance);
@@ -303,39 +296,56 @@ public abstract class Unit : MonoBehaviour
     }
 
     //TODO
-    //BUG: zwischen verschiedenen Playern wir dieselbe Referenz der EnemiesKnown geshared, ejde rspieler sollte aber siene individuelle Lsite mit den individuellen distances haben
+    //BUG: zwischen verschiedenen Playern wird dieselbe Referenz der EnemiesKnown geshared, ejde rspieler sollte aber siene individuelle Lsite mit den individuellen distances haben
     public void ShareSeenEnemies(List<Enemy> enemiesInAggroDistance)
     {
-        //populate all enemies in AggroDistance to other TeamMembers in range
-        
-        MergeEnemiesKnown(enemiesInAggroDistance);
-        
+        //create new List to not share the same reference?
+        List<Enemy> enemies = new List<Enemy>();
+
+        for (int i = 0; i < enemiesInAggroDistance.Count; i++)
+        {
+            if (enemiesInAggroDistance[i].Transform == null)
+            {
+                enemies.Remove(enemiesInAggroDistance[i]);
+                continue;
+            }
+
+            float dist = Vector3.Distance(transform.position, enemiesInAggroDistance[i].Transform.position);
+            //make new Enemy to prevent overriting the distance of allies Enemies-List.
+            Enemy newEnemy = new Enemy();
+            newEnemy.Transform = enemiesInAggroDistance[i].Transform;
+            newEnemy.Distance = dist;
+            newEnemy.currentHealth = enemiesInAggroDistance[i].Transform.GetComponent<Unit>().CurrentHealth;
+            newEnemy.currentArmor = enemiesInAggroDistance[i].Transform.GetComponent<Unit>().Armor;
+            newEnemy.isBoss = enemiesInAggroDistance[i].isBoss;
+
+
+            enemies.Add(newEnemy);
+            //Debug.Log($"{name} knows: {newEnemy.Transform.gameObject.name} with distance {newEnemy.Distance} at {newEnemy.currentHealth} HP");
+        }
+
+        MergeEnemiesKnown(enemies);      
     }
 
- 
     public void MergeEnemiesKnown(List<Enemy> enemiesToMerge)
     {
         // If targetList is null, initialize an empty list
         List<Enemy> result = EnemiesKnown != null ? EnemiesKnown : new List<Enemy>();
 
         // Create a HashSet for quick lookup of known transforms (empty if targetList is null)
-        HashSet<Transform> knownTransforms = EnemiesKnown != null ? new HashSet<Transform>(EnemiesKnown.Select(e => e.transform)) : new HashSet<Transform>();
+        HashSet<Transform> knownTransforms = EnemiesKnown != null ? new HashSet<Transform>(EnemiesKnown.Select(e => e.Transform)) : new HashSet<Transform>();
 
         // Loop through the enemies to merge and add those that aren't already in the HashSet
         for (int i = 0; i < enemiesToMerge.Count; i++)
         {
             Enemy enemy = enemiesToMerge[i]; // Greife auf den aktuellen Enemy zu
-            if (knownTransforms.Add(enemy.transform)) // Add returns false if it's already present
+            if (knownTransforms.Add(enemy.Transform)) // Add returns false if it's already present
             {
                 result.Add(enemy);
             }
         }
 
-        // After merging, convert back to an array (if you need to reassign it)
-        EnemiesKnown = result;
-
-        // Füge nur die Feinde hinzu, die noch nicht in der Ziel-Liste sind
-
+        EnemiesKnown = new List<Enemy>(result);
     }
 
     public void DealDamage(float dmg, Unit source, EDamageType type=EDamageType.normal, float piercing =0f)
@@ -451,32 +461,30 @@ public abstract class Unit : MonoBehaviour
     }
 
 
-    private Transform GetTargetByGoal(List<Enemy> enemies)
+    private Transform GetTargetByGoal()
     {
+
         return CombatFocus switch
         {
-            ECombatFocus.unkown => GetNearestTarget(enemies),
-            ECombatFocus.nearest => GetNearestTarget(enemies),
-            ECombatFocus.highestLife => GetTargetBasedOnLife(enemies, "high"),
-            ECombatFocus.lowestLife => GetTargetBasedOnLife(enemies, "low"),
-            ECombatFocus.Armored => GetTargetBasedOnArmor(enemies),
-            ECombatFocus.Boss => GetBoss(enemies),
+            ECombatFocus.unkown => GetNearestTarget(EnemiesKnown),
+            ECombatFocus.nearest => GetNearestTarget(EnemiesKnown),
+            ECombatFocus.highestLife => GetTargetBasedOnLife(EnemiesKnown, "high"),
+            ECombatFocus.lowestLife => GetTargetBasedOnLife(EnemiesKnown, "low"),
+            ECombatFocus.Armored => GetTargetBasedOnArmor(EnemiesKnown),
+            ECombatFocus.Boss => GetBoss(EnemiesKnown),
             _ => null
         };
-        
-        
-        throw new NotImplementedException();
     }
 
     private Transform GetBoss(List<Enemy> enemies)
     {
-        Transform target = enemies.FirstOrDefault(e => e.isBoss).transform;
+        Transform target = enemies.FirstOrDefault(e => e.isBoss).Transform;
         return target ?? GetNearestTarget(enemies);
     }
 
     private Transform GetTargetBasedOnArmor(List<Enemy> enemies)
     {
-        Transform target = enemies.OrderByDescending(enemy => enemy.currentArmor).FirstOrDefault().transform;
+        Transform target = enemies.OrderByDescending(enemy => enemy.currentArmor).FirstOrDefault().Transform;
         return target ?? GetNearestTarget(enemies);
     }
 
@@ -484,8 +492,8 @@ public abstract class Unit : MonoBehaviour
     {
         Transform target = v switch
         {
-            "high" => enemies.OrderByDescending(enemy => enemy.currentHealth).FirstOrDefault().transform,
-            "low" => enemies.OrderBy(enemy => enemy.currentHealth).FirstOrDefault().transform,
+            "high" => enemies.OrderByDescending(enemy => enemy.currentHealth).FirstOrDefault().Transform,
+            "low" => enemies.OrderBy(enemy => enemy.currentHealth).FirstOrDefault().Transform,
             _ => null
         };
 
@@ -494,12 +502,15 @@ public abstract class Unit : MonoBehaviour
 
     private Transform GetNearestTarget(List<Enemy> enemies)
     {
-        foreach (var enemy in enemies)
+        List<Enemy> allenemies = enemies.OrderBy(enemy => enemy.Distance).ToList<Enemy>();
+        
+        for (int i = 0; i < allenemies.Count; i++)
         {
-            Debug.Log($"Enemy: {enemy.transform.name}, Distance: {enemy.distance}");
+            var enemy = allenemies[i];
+            Debug.Log($"{name} targetOption: {enemy.Transform.name}, Distance: {enemy.Distance}");
         }
 
-        Transform target = enemies.OrderBy(enemy => enemy.distance).FirstOrDefault().transform;
+        Transform target = allenemies.FirstOrDefault().Transform;
 
         if (target != null)
         {
@@ -518,8 +529,8 @@ public abstract class Unit : MonoBehaviour
             .Where(collider => collider.CompareTag("Entity") && collider.transform != transform && TeamNumber != collider.GetComponent<Unit>()?.TeamNumber)
             .Select(collider => new Enemy
             {
-                transform = collider.transform,
-                distance = Vector3.Distance(transform.position, collider.transform.position),
+                Transform = collider.transform,
+                Distance = Vector3.Distance(transform.position, collider.transform.position),
                 currentHealth = collider.GetComponent<Unit>()?.MaxHealth ?? 0,
                 currentArmor = collider.GetComponent<Unit>()?.Armor ?? 0,
                 isBoss = collider.GetComponent<Unit>()?.UnitSize == EUnitSize.huge // Example condition for boss
@@ -529,8 +540,8 @@ public abstract class Unit : MonoBehaviour
             .Where(collider => collider.CompareTag("Entity") && collider.transform != transform && TeamNumber == collider.GetComponent<Unit>()?.TeamNumber)
             .Select(collider => new Ally
             {
-                transform = collider.transform,
-                distance = Vector3.Distance(transform.position, collider.transform.position),
+                Transform = collider.transform,
+                Distance = Vector3.Distance(transform.position, collider.transform.position),
                 currentHealth = collider.GetComponent<Unit>()?.MaxHealth ?? 0,
                 currentArmor = collider.GetComponent<Unit>()?.Armor ?? 0
                 // Weitere Attribute für Freunde können hier hinzugefügt werden
@@ -557,6 +568,10 @@ public abstract class Unit : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, AggroRadius);
+
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, AttackRange);
     }
 
 }

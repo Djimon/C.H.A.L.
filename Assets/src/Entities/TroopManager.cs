@@ -6,8 +6,6 @@ public class TroopManager : MonoBehaviour
 {
     private List<Unit> units = new List<Unit>();
 
-
-
     // Start is called before the first frame update
     void Start()
     {
@@ -17,20 +15,35 @@ public class TroopManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        foreach (var unit in units)
+        // Verwende eine temporäre Liste, um Modifikationen während der Iteration zu vermeiden
+        List<Unit> unitsToUpdate = new List<Unit>(units);
+
+        foreach (var unit in unitsToUpdate)
         {
-            unit.UpdateUnit();
+            if (unit != null)
+            {
+                unit.UpdateUnit();
+            }
         }
+
+        // Optional: Bereinige 'null'-Einträge (falls Einheiten unerwartet null werden)
+        units.RemoveAll(unit => unit == null);
     }
 
     public void RegisterUnit(Unit unit)
     {
-        units.Add(unit);
+        if (unit != null && !units.Contains(unit))
+        {
+            units.Add(unit);
+        }
     }
 
     public void UnregisterUnit(Unit unit)
     {
-        units.Remove(unit);
+        if (unit != null && units.Contains(unit))
+        {
+            units.Remove(unit);
+        }
     }
 
 }

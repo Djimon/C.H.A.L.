@@ -1,0 +1,59 @@
+{
+    "type": "Monster",
+    "pools": [
+        {
+            "name": "normal",
+            "rolls": 2,
+            "entries": [
+                {
+                    "name": "remains:chitin_armor",
+                    "weight": 1,
+                    "quantity": 1
+                },
+                {
+                    "name": "remains:gland",
+                    "weight": 1,
+                    "quantity": 1
+                },
+                {
+                    "name": "remains:capsule",
+                    "weight": 1,
+                    "quantity": 1
+                },
+                {
+                    "name": "remains:antenna",
+                    "weight": 1,
+                    "quantity": 1
+                }
+            ],
+            "conditions": []
+        },
+        {
+            "name": "bonus",
+            "rolls": 1,
+            "entries": [
+                {
+                    "name": "remains:glitter_dust",
+                    "weight": 1,
+                    "quantity": 5
+                },
+                {
+                    "name": "remains:glitter_dust",
+                    "weight": 1,
+                    "quantity": 10
+                },
+                {
+                    "name": "remains:glitter_dust",
+                    "weight": 1,
+                    "quantity": 20
+                }
+            ],
+            "conditions": [
+                {
+                    "condition": "random",
+                    "chance": 0.25
+                }
+            ]
+        }
+    ]
+}

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class LootTest : MonoBehaviour
@@ -7,6 +8,9 @@ public class LootTest : MonoBehaviour
     public LootSystem lootsystem;
 
     public LootTable lootTable;
+
+    [SerializeField]
+    public List<RefinedLootTable> AddNewlootTableList;
 
     private Collider col;
     private Rigidbody rig;
@@ -39,5 +43,21 @@ public class LootTest : MonoBehaviour
     {
         lootsystem.RollLootTable(lootTable);
         Destroy(this.gameObject);
+    }
+
+    public void SaveLootTablesToJson()
+    {
+        LootSerializer serializer = new LootSerializer();
+        
+        for (int i = 0; i < AddNewlootTableList.Count; i++)
+        {
+            RefinedLootTable currentLootTable = AddNewlootTableList[i];
+            var lootTablename = currentLootTable.Name;
+            string filePath = Path.Combine(Application.dataPath, $"Resources/lootTables/{lootTablename}.json");
+
+            serializer.SaveLootTable(currentLootTable, filePath);
+        }
+        
+
     }
 }

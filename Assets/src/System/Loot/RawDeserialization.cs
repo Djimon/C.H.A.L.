@@ -14,6 +14,7 @@ public class LootDeserializer
         // Now convert it to the full LootTable
         LootTable lootTable = new LootTable
         {
+            Name = jsonFile.name,
             type = rawLootTable.type,
             pools = new List<Pool>()
         };

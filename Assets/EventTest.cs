@@ -1,9 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 public class EvenTest : MonoBehaviour
 {
+    public LootTable LootTable;
+
+
     private void Update()
     {
         // Test-Events auslösen
@@ -37,5 +41,6 @@ public class EvenTest : MonoBehaviour
             EventManager.TriggerSpellCast(); // Zauber gewirkt
         }
     }
+
 }
 

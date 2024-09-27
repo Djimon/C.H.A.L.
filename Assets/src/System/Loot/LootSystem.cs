@@ -9,7 +9,7 @@ using UnityEngine;
 public class LootSystem : MonoBehaviour
 {
     public ItemRegistry itemRegistry;
-    private List<LootTable> lootTables;
+    public List<LootTable> lootTables;
 
     private void Awake()
     {

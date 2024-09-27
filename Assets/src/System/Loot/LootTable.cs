@@ -7,7 +7,7 @@ public enum ELootTableType
 {
     TypeUnkown = -1,
     Chest,
-    Material,
+    Monster,
     SpecialEvent,
     Boss,
     // Add more types as needed
@@ -16,6 +16,7 @@ public enum ELootTableType
 [System.Serializable]
 public class LootTable
 {
+    public string Name;
     public string type;
     public List<Pool> pools;
 
@@ -92,8 +93,8 @@ public class Pool
 public enum EItemType
 {
     none =-1,
-    Part,
-    PowerUp,
+    Module,
+    Remains,
     Rune,
     //To be continues
 }
@@ -134,6 +135,14 @@ public class Entry
     }
 }
 
+[System.Serializable]
+public class Condition
+{
+    public string condition;  // z.B. "random" oder "time"
+    public float chance = 1.0f;  // Nur für "random"
+
+}
+
 public enum ETimeOfDay
 {
     Day,
@@ -145,12 +154,4 @@ public enum EGameMode
     Easy,
     Medium,
     Hard
-}
-
-[System.Serializable]
-public class Condition
-{
-    public string condition;  // z.B. "random" oder "time"
-    public float chance = 1.0f;  // Nur für "random"
-
 }

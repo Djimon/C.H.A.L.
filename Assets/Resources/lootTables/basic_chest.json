@@ -6,7 +6,7 @@
       "rolls": 1,
       "entries": [
         {
-          "name": "part:normal_arm"
+          "name": "module:normal_arm"
         }
       ],
       "conditions": [
@@ -21,12 +21,12 @@
       "rolls": 2,
       "entries": [
         {
-          "name": "part:normal_arm",
+          "name": "module:normal_arm",
           "weight": 50,
           "quantity": 1
         },
         {
-          "name": "part:normal_arm",
+          "name": "module:normal_arm",
           "weight": 10,
           "quantity": 5
         }

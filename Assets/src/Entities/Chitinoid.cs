@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MeleeUnit : Unit
+public class Chitinoid : Unit
 {
 
     //TODO: Get rid of MAgic Cosntants
@@ -11,7 +11,7 @@ public class MeleeUnit : Unit
     protected override void Awake()
     {
         base.Awake();
-        Createunit(MaxHealth, CurrentHealth, Armor, AggroRadius, UnitSize, updateInterval);
+        Createunit(MaxHealth, CurrentHealth, Armor, AggroRadius, UnitSize, EMonsterType.Chitinoid,updateInterval);
     }
 
     // Start is called before the first frame update

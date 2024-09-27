@@ -2,20 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RangeUnit : Unit
+public class PlayerUnit : Unit
 {
-    private float RangeCooldown = 3.5f;
+    //TODO: Get rid of MAgic Cosntants
+    public float MeleeCooldown = 2f;
 
     protected override void Awake()
     {
         base.Awake();
-        Createunit(MaxHealth, CurrentHealth, Armor, AggroRadius, UnitSize, updateInterval);
+        Createunit(MaxHealth, CurrentHealth, Armor, AggroRadius, UnitSize, EMonsterType.Player, updateInterval);
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -23,24 +24,15 @@ public class RangeUnit : Unit
     {
         //UpdateUnit(); //the TroopManager does this
     }
+
     protected override void Attack()
     {
-        //Can't wlak during shooting
-        canWalk = false;
-        Invoke(nameof(ResetWalkingSpeed), 1.5f); //TODO: ersetzen mit Dauer der Animation
-
         base.Attack();
-        Invoke(nameof(ResetAttack), RangeCooldown); //3 Sekunden Cooldown
+        Invoke(nameof(ResetAttack), MeleeCooldown); //3 Sekunden Cooldown
     }
 
     private void ResetAttack()
     {
         canAttack = true;
     }
-
-    private void ResetWalkingSpeed()
-    {
-        agent.speed = WalkingSpeed;
-    }
-
 }

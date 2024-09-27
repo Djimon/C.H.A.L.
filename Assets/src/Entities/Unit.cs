@@ -35,6 +35,15 @@ public enum EDamageType
     lightning
 }
 
+public enum EMonsterType
+{
+    undefined = -1,
+    Player,
+    Chitinoid,
+    Reptiloid,
+    Beastoid
+}
+
 public struct Enemy
 {
     public Transform transform;
@@ -108,7 +117,14 @@ public abstract class Unit : MonoBehaviour
     public ECombatFocus CombatFocus = ECombatFocus.unkown;
 
     [SerializeField]
+    public EMonsterType MonsterType = EMonsterType.undefined;
+
+    [SerializeField]
     public int TeamNumber;
+
+    private IAttackSet MeleeAttack;
+    private IAttackSet RangeAttack;
+    private IAttackSet SpecialAttack;
 
 
     protected bool canWalk = true ;
@@ -157,7 +173,7 @@ public abstract class Unit : MonoBehaviour
         }
     }
 
-    protected void Createunit(float maxHealth, float currentHealth, float armor, float aggroRadius, EUnitSize size, float interval)
+    protected void Createunit(float maxHealth, float currentHealth, float armor, float aggroRadius, EUnitSize size, EMonsterType monsterType, float interval, bool canMelee = true, bool canRange = false)
     {
         MaxHealth = maxHealth;
         CurrentHealth = currentHealth;
@@ -165,6 +181,12 @@ public abstract class Unit : MonoBehaviour
         AggroRadius = aggroRadius;
         UnitSize = size;
         updateInterval = interval;
+        MonsterType = monsterType;
+
+        MeleeAttack = canMelee ? new MeleeAttackStrategy(): null;
+        RangeAttack = canRange ? new RangedAttackStrategy(): null;
+
+        //SpecialAttack will allways be activated later in the game
     }
 
     void Update()
@@ -203,24 +225,26 @@ public abstract class Unit : MonoBehaviour
         }
 
         //Before Calculating the Target, update position and Helath
-        if(EnemiesKnown != null)
+        int knownEnemies = 0;
+        if (EnemiesKnown != null)
         {
             UpdateKnownEnemies();
-        }
+            knownEnemies = EnemiesKnown.Count;
+        }        
         
 
         //BUG: If first target dies, changed to main target and never changed back, evne if Enemie stays Known
-        newtarget = foundEnemies switch
+        newtarget = knownEnemies switch
         {
-            0 => null,
+            0 => newtarget = mainTarget,
             1 => newtarget = EnemiesKnown[0].transform,
             _ => newtarget = GetTargetByGoal(EnemiesKnown)
         };
 
-        if (currentTarget == null)
-        {
-            currentTarget = mainTarget;
-        }
+        //if (currentTarget == null)
+        //{
+        //    currentTarget = mainTarget;
+        //}
 
         if (newtarget != null && newtarget != currentTarget)
         {
@@ -257,7 +281,9 @@ public abstract class Unit : MonoBehaviour
             enemy.distance = Vector3.Distance(transform.position, enemy.transform.position);
             enemy.currentHealth = enemy.transform.GetComponent<Unit>().CurrentHealth;
             enemy.currentArmor = enemy.transform.GetComponent<Unit>().Armor;
+            Debug.Log($"known: {enemy.transform.gameObject.name} with distance {enemy.distance} at {enemy.currentHealth} HP");
         }
+        EnemiesKnown = enemyList;
     }
 
     private void Communicate()
@@ -276,14 +302,17 @@ public abstract class Unit : MonoBehaviour
         //TODO: NeedHelp if HP is low? only if a healing feature is added
     }
 
+    //TODO
+    //BUG: zwischen verschiedenen Playern wir dieselbe Referenz der EnemiesKnown geshared, ejde rspieler sollte aber siene individuelle Lsite mit den individuellen distances haben
     public void ShareSeenEnemies(List<Enemy> enemiesInAggroDistance)
     {
         //populate all enemies in AggroDistance to other TeamMembers in range
-        //Debug.Log("Existance of Enemies has been shared");
+        
         MergeEnemiesKnown(enemiesInAggroDistance);
+        
     }
 
-
+ 
     public void MergeEnemiesKnown(List<Enemy> enemiesToMerge)
     {
         // If targetList is null, initialize an empty list
@@ -309,12 +338,12 @@ public abstract class Unit : MonoBehaviour
 
     }
 
-    public void DealDamage(float dmg, EDamageType type=EDamageType.normal, float piercing =0f)
+    public void DealDamage(float dmg, Unit source, EDamageType type=EDamageType.normal, float piercing =0f)
     {
         float damageAfterArmor = CalculateArmorAbsorbtion(dmg, type, ref piercing);
         Debug.Log($"{gameObject.name} lost {damageAfterArmor} healtpoints.");
 
-        SubstractHealth(damageAfterArmor);
+        SubstractHealth(damageAfterArmor, source);
     }
 
     private float CalculateArmorAbsorbtion(float dmg, EDamageType type, ref float piercing)
@@ -340,14 +369,22 @@ public abstract class Unit : MonoBehaviour
         return damageAfterArmor;
     }
 
-    private void SubstractHealth(float damageAfterArmor)
+    private void SubstractHealth(float damageAfterArmor, Unit source)
     {
         CurrentHealth -= damageAfterArmor;
         if(CurrentHealth <= 0f) 
         {
             CurrentHealth = 0f;
+            source.GetKill(this);
             Die();
         }
+    }
+
+    public void GetKill(Unit unit)
+    {
+        String victimName  = unit.name;
+        EUnitSize victimSize = unit.UnitSize;
+        
     }
 
     private void AddHealth(float health)
@@ -374,9 +411,26 @@ public abstract class Unit : MonoBehaviour
         //TODO: What dmage-type do we have?
         // Do we have piercing bonus?
         // TODO: Chekcen ob meelee oder Range
-        currentTarget.GetComponent<Unit>()?.DealDamage(dmg);
+        currentTarget.GetComponent<Unit>()?.DealDamage(dmg, this);
         canAttack = false;
 
+        //TODO: Refactor to decide if use PerformMeleeAttack oder PerformRangeAttack oder PerformSpecialAttack
+
+    }
+
+    protected void PerformMeleeAttack()
+    {
+        MeleeAttack.Attack();
+    }
+
+    protected void PerformRangeAttack()
+    {
+        RangeAttack.Attack();
+    }
+
+    protected void PerformSpecialAttack()
+    {
+        SpecialAttack.Attack();
     }
 
     private float CalculateDamageDealt()
@@ -440,7 +494,18 @@ public abstract class Unit : MonoBehaviour
 
     private Transform GetNearestTarget(List<Enemy> enemies)
     {
+        foreach (var enemy in enemies)
+        {
+            Debug.Log($"Enemy: {enemy.transform.name}, Distance: {enemy.distance}");
+        }
+
         Transform target = enemies.OrderBy(enemy => enemy.distance).FirstOrDefault().transform;
+
+        if (target != null)
+        {
+            Debug.Log($"Selected Target: {target.name}");
+        }
+
         return target;
     }
 

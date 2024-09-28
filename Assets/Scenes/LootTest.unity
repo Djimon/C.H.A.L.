@@ -155,6 +155,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemRegistry: {fileID: 46013889}
+  lootTables: []
 --- !u!4 &46013888
 Transform:
   m_ObjectHideFlags: 0

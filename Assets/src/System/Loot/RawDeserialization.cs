@@ -1,5 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using UnityEditor;
+using UnityEditor.VersionControl;
 using UnityEngine;
 using static UnityEditor.Progress;
 
@@ -19,9 +23,9 @@ public class LootDeserializer
             pools = new List<Pool>()
         };
 
-        Debug.Log($"raw Type = {rawLootTable.type}");
+        Debug.Log($"raw Type = {rawLootTable.type}, pools: {rawLootTable.pools.Count}");
 
-        lootTable.register();
+        //lootTable.register();
 
         foreach (var rawPool in rawLootTable.pools)
         {
@@ -53,8 +57,13 @@ public class LootDeserializer
                 else
                 {
                     Debug.LogWarning($"Item with name '{entry.instanceName}' doesn't exist.");
+                    pool.entries.Add(new Entry { name = "missing_"+entry.instanceName, weight = 0, quantity = 0, itemType = EItemType.none, instanceName = "missing" });
+                    //TODO: Save as scriptable Object in new path
+
+                    CreateAndSaveMissingItemAsSO(entry);
+
                 }
-             
+
             }
 
             // Process conditions
@@ -77,6 +86,40 @@ public class LootDeserializer
         // Now you can use the populated LootTable
         Debug.Log("LootTable successfully loaded and processed.");
         return lootTable;
+    }
+
+    private void CreateAndSaveMissingItemAsSO(Entry entry)
+    {
+        EItemType itemType = entry.itemType;
+        string instanceName = entry.instanceName;
+        string folder = itemType switch 
+        {
+            EItemType.none => "missingType",
+            EItemType.Module => "Module",
+            EItemType.Remains => "Remains",
+            EItemType.Rune => "Rune",
+            _ => "missingType"
+        };
+        //Path.Combine(Application.dataPath, $"Resources/lootTables/{lootTablename}.json");
+        string path = Path.Combine(Application.dataPath, $"Resources/Items/{folder}/_missing/");
+        if (!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+        }
+        string filename = $"{instanceName}.asset";
+        string assetPath = Path.Combine(path, filename);
+        string relativePath = "Assets" + assetPath.Replace(Application.dataPath, "");
+
+        //Create and Save the ScriptableObject
+        ScriptableTemplate asset = ScriptableObject.CreateInstance<ScriptableTemplate>();
+        asset.itemName = entry.name;
+        asset.rarity = ERarityLevel.Common;
+        asset.name = entry.instanceName;
+
+        AssetDatabase.CreateAsset(asset, relativePath);
+        AssetDatabase.SaveAssets();
+
+        Debug.Log($"ScriptableObject for missing item '{instanceName}' saved under Ressources/items/{folder}/_missing/.");
     }
 }
 

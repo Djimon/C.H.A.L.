@@ -5,6 +5,10 @@ using System;
 
 public static class EventManager
 {
+
+    //genutzte Event
+    public static event Action<Unit, EMonsterType> OnUnitKilled;
+
     // Beispiel-Events für verschiedene Aktionen
     public static event Action OnEnemyKilled;
     public static event Action OnBossKilled;
@@ -15,6 +19,10 @@ public static class EventManager
     public static event Action OnSpellCast;
 
     // Methoden, um Events auszulösen
+    public static void TriggerUnitKilled(Unit unit,EMonsterType mtype) => OnUnitKilled?.Invoke(unit, mtype);
+
+
+    //Beispiele
     public static void TriggerEnemyKilled() => OnEnemyKilled?.Invoke();
     public static void TriggerBossKilled() => OnBossKilled?.Invoke();
     public static void TriggerDistanceTraveled(float distance) => OnDistanceTraveled?.Invoke(distance);

@@ -19,6 +19,29 @@ public class LootSystem : MonoBehaviour
     private void Start()
     {
         Initilize();
+        EventManager.OnUnitKilled += RewardKiller;
+    }
+
+    private void RewardKiller(Unit killer, EMonsterType victimMonsterType)
+    {
+        int playerID = killer.TeamNumber;
+        AddLoot(playerID, victimMonsterType);
+    }
+
+    private void AddLoot(int playerID, EMonsterType victimMonsterType)
+    {
+        //TODO: implement
+        LootTable table = FindLootTable(victimMonsterType);
+        List<ItemBase> loot = RollLootTable(table);
+        // TODO:
+        // Add Items do PlayerInventory
+        DebugManager.Log($"Player {playerID} gets loot from killing {victimMonsterType}", 2, "Info", Color.green);
+    }
+
+    private LootTable FindLootTable(EMonsterType victimMonsterType)
+    {
+        //TODO: implement
+        throw new NotImplementedException();
     }
 
     // Start is called before the first frame update
@@ -71,8 +94,10 @@ public class LootSystem : MonoBehaviour
         return pool.precomputedEntries[index];
     }
 
-    public void RollLootTable(LootTable lootTable)
+    public List<ItemBase> RollLootTable(LootTable lootTable)
     {
+        List<ItemBase> loot = new List<ItemBase>();
+
         foreach (var pool in lootTable.pools)
         {
             if (CheckConditions(pool.conditions))
@@ -88,13 +113,16 @@ public class LootSystem : MonoBehaviour
                         DebugManager.Log($"Item Details: {item.GetItemDetails()}");
 
                         //TODO: Add Item to inventory
+                        //TODO: translate Entry into real Items an add them to inventory
 
-                    }  
+                        //loot.Add(item);
 
-                    //TODO: translate Entry into real Items an add them to inventory
+                    }   
                 }
             }
         }
+
+        return loot;
     }
 
     private bool CheckConditions(List<Condition> conditions)

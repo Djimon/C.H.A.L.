@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -9,8 +10,11 @@ public class ConfigurationLoader : MonoBehaviour
 {
     public static ConfigurationLoader Instance { get; private set; }
 
+    public GameManager gameManager;
+
     public RarityConfig rarityConfig;
     public DebugConfig debugConfig;
+    public RewardConfig rewardData;
 
     private void Awake()
     {
@@ -23,6 +27,13 @@ public class ConfigurationLoader : MonoBehaviour
             LoadRarityConfig();
             LoadDebugConfig();
         }
+
+        gameManager = GetComponent<GameManager>();
+
+    }
+
+    private void Start()
+    {
 
     }
 
@@ -80,6 +91,35 @@ public class ConfigurationLoader : MonoBehaviour
             DebugManager.Error("Debug-Konfigurationsdatei nicht gefunden.");
         }
     }
+
+    private void LoadRewardsConfig()
+    {
+        string path = Path.Combine(Application.dataPath, "config/RewardConfig.json");
+
+        if (File.Exists(path))
+        {
+            string json = File.ReadAllText(path);
+            rewardData = JsonUtility.FromJson<RewardConfig>(json);
+            Debug.Log("Rewards config loaded successfully!");
+        }
+        else
+        {
+            Debug.LogError("Rewards config file not found: " + path);
+        }
+    }
+
+
+    // Speichere die aktuelle RewardData in eine JSON-Datei
+    public void SaveRewardsToJson(RewardConfig config)
+    {
+        string path = Path.Combine(Application.dataPath, "config/RewardConfig.json");
+        string json = JsonUtility.ToJson(config, true); // `true` formatiert die JSON schön
+        File.WriteAllText(path, json);
+        Debug.Log("Rewards config saved successfully to " + path);
+    }
+
+
+
 
     private void OnDisable()
     {

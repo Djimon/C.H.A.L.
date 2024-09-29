@@ -386,7 +386,7 @@ public abstract class Unit : MonoBehaviour
         {
             CurrentHealth = 0f;
             source.GetKill(this);
-            EventManager.TriggerUnitKilled(source, this.MonsterType);
+            EventManager.TriggerUnitKilled(source, this.MonsterType, this.UnitSize);
             Die();
         }
     }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 
 // Specific class for items in the "PowerUp" category
-public class Remains : ItemBase
+public class Remains : Item
 {
     public string Text { get; set; }
     public float Value { get; set; }

@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Rune : ItemBase
+public class Rune : Item
 {
+    public int runeID {  get; private set; }
     public string Element { get; set; }  // e.g., Fire, Ice, Lightning
     public int Power { get; set; }
 

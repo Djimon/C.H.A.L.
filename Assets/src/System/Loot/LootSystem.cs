@@ -13,29 +13,23 @@ public class LootSystem : MonoBehaviour
 
     private void Awake()
     {
-        
+        itemRegistry = GetComponent<ItemRegistry>();
     }
 
     private void Start()
     {
         Initilize();
-        EventManager.OnUnitKilled += RewardKiller;
     }
 
-    private void RewardKiller(Unit killer, EMonsterType victimMonsterType)
-    {
-        int playerID = killer.TeamNumber;
-        AddLoot(playerID, victimMonsterType);
-    }
-
-    private void AddLoot(int playerID, EMonsterType victimMonsterType)
+    public void AddLootFromMobKill(int playerID, EMonsterType victimMonsterType)
     {
         //TODO: implement
-        LootTable table = FindLootTable(victimMonsterType);
-        List<ItemBase> loot = RollLootTable(table);
+        //LootTable table = FindLootTable(victimMonsterType);
+        //List<Item> loot = RollLootTable(table);
         // TODO:
         // Add Items do PlayerInventory
         DebugManager.Log($"Player {playerID} gets loot from killing {victimMonsterType}", 2, "Info", Color.green);
+
     }
 
     private LootTable FindLootTable(EMonsterType victimMonsterType)
@@ -94,9 +88,9 @@ public class LootSystem : MonoBehaviour
         return pool.precomputedEntries[index];
     }
 
-    public List<ItemBase> RollLootTable(LootTable lootTable)
+    public List<Item> RollLootTable(LootTable lootTable)
     {
-        List<ItemBase> loot = new List<ItemBase>();
+        List<Item> loot = new List<Item>();
 
         foreach (var pool in lootTable.pools)
         {

@@ -18,13 +18,13 @@ public enum ESizeType
 }
 
 // Specific class for items in the "Part" category
-public class Part : ItemBase
+public class Module : Item
 {
     public EAnchorType Anchor { get; set; }
     public ESizeType Size { get; set; }
 
     // Constructor
-    public Part(string name, ERarityLevel rarity, Sprite image, EAnchorType anchor, ESizeType size)
+    public Module(string name, ERarityLevel rarity, Sprite image, EAnchorType anchor, ESizeType size)
     {
         Name = name;
         Rarity = rarity;

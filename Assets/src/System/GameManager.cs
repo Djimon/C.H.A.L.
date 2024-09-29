@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(SaveSystem))]
+[RequireComponent(typeof(ConfigurationLoader))]
+[RequireComponent(typeof(CentralBank))]
 public class GameManager : MonoBehaviour
 {
     private GameData gameData;
@@ -12,7 +15,7 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         centralBank = GetComponent<CentralBank>();
-        saveSystem = FindObjectOfType<SaveSystem>();
+        saveSystem = GetComponent<SaveSystem>();
         gameData = saveSystem.LoadGameData();
     }
 

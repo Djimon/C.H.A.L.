@@ -40,7 +40,7 @@ public class DebugManager
         {
             Color tagColor = customColor ?? GetTagColor(tag);
             string timeStamp = GetGameTime();
-            string coloredTimeAndTag = $"<color=#{ColorUtility.ToHtmlStringRGB(tagColor)}>{timeStamp} {tag}</color>";
+            string coloredTimeAndTag = $"<color=#{ColorUtility.ToHtmlStringRGB(tagColor)}>{tag} @ {timeStamp}s</color>";
             Debug.Log($"[{coloredTimeAndTag}]: {message}");
         }
         else if(!ActiveTags.Contains(tag)) 
@@ -60,7 +60,7 @@ public class DebugManager
         {
             Color tagColor = customColor ?? GetTagColor(tag);
             string timeStamp = GetGameTime();
-            string coloredTimeAndTag = $"<color=#{ColorUtility.ToHtmlStringRGB(tagColor)}>{timeStamp} {tag}</color>";
+            string coloredTimeAndTag = $"<color=#{ColorUtility.ToHtmlStringRGB(tagColor)}>{tag} @ {timeStamp}s</color>";
             Debug.LogError($"[{coloredTimeAndTag}]: {message}");
         }
         else if (!ActiveTags.Contains(tag))
@@ -80,7 +80,7 @@ public class DebugManager
         {
             Color tagColor = customColor ?? GetTagColor(tag);
             string timeStamp = GetGameTime();
-            string coloredTimeAndTag = $"<color=#{ColorUtility.ToHtmlStringRGB(tagColor)}>{timeStamp} {tag}</color>";
+            string coloredTimeAndTag = $"<color=#{ColorUtility.ToHtmlStringRGB(tagColor)}>{tag} @ {timeStamp}s</color>";
             Debug.LogWarning($"[{coloredTimeAndTag}]: {message}");
         }
         else if (!ActiveTags.Contains(tag))

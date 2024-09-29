@@ -162,7 +162,7 @@ public abstract class Unit : MonoBehaviour
 
         currentTarget = mainTarget; // Start by moving towards the main target
         agent.SetDestination(currentTarget.position);
-        DebugManager.Log($"Target locked: {currentTarget.position}");
+        DebugManager.Log($"Target locked: {currentTarget.position}", 3, "AI");
     }
 
     protected virtual void OnDisable()
@@ -217,7 +217,7 @@ public abstract class Unit : MonoBehaviour
         AlliesInRange = DetectedEntities.Allies;
 
         int foundEnemies = EnemiesInAggroDistance.Count;
-        DebugManager.Log($"found {foundEnemies} enemies.");
+        DebugManager.Log($"found {foundEnemies} enemies.",3,"AI");
 
         if (foundEnemies > 0)
         {
@@ -242,7 +242,7 @@ public abstract class Unit : MonoBehaviour
         if (newtarget != currentTarget)
         {
             currentTarget = newtarget;
-            DebugManager.Log($"{this.name} changed target to {newtarget.name} ({CombatFocus})");
+            DebugManager.Log($"{this.name} changed target to {newtarget.name} ({CombatFocus})", 3, "AI");
         }
         
 
@@ -274,7 +274,7 @@ public abstract class Unit : MonoBehaviour
             enemy.Distance = Vector3.Distance(transform.position, enemy.Transform.position);
             enemy.currentHealth = enemy.Transform.GetComponent<Unit>().CurrentHealth;
             enemy.currentArmor = enemy.Transform.GetComponent<Unit>().Armor;
-            DebugManager.Log($"{name} knows: {enemy.Transform.gameObject.name} with distance {enemy.Distance} at {enemy.currentHealth} HP");
+            DebugManager.Log($"{name} knows: {enemy.Transform.gameObject.name} with distance {enemy.Distance} at {enemy.currentHealth} HP",3,"AI");
         }
         return new List<Enemy>(enemyList);
     }
@@ -351,7 +351,7 @@ public abstract class Unit : MonoBehaviour
     public void DealDamage(float dmg, Unit source, EDamageType type=EDamageType.normal, float piercing =0f)
     {
         float damageAfterArmor = CalculateArmorAbsorbtion(dmg, type, ref piercing);
-        DebugManager.Log($"{gameObject.name} lost {damageAfterArmor} healtpoints.");
+        DebugManager.Log($"{gameObject.name} lost {damageAfterArmor} healtpoints.", 3, "AI");
 
         SubstractHealth(damageAfterArmor, source);
     }
@@ -405,7 +405,7 @@ public abstract class Unit : MonoBehaviour
     private void Die()
     {
         
-        DebugManager.Log($"{this.name} died!");
+        DebugManager.Log($"{this.name} died!", 2, "Info",Color.green);
         troopManager.UnregisterUnit(this);
         gameObject.SetActive(false);
         //TODO: Refactor with UnitPools
@@ -417,7 +417,7 @@ public abstract class Unit : MonoBehaviour
         // Placeholder: Implement attack logic here
         // Reduce health, trigger animations, etc.on();
         float dmg = CalculateDamageDealt();  
-        DebugManager.Log($"{gameObject.name} attacked {currentTarget.name} with {dmg} damage");
+        DebugManager.Log($"{gameObject.name} attacked {currentTarget.name} with {dmg} damage", 3, "AI");
         //TODO: What dmage-type do we have?
         // Do we have piercing bonus?
         // TODO: Chekcen ob meelee oder Range
@@ -507,14 +507,14 @@ public abstract class Unit : MonoBehaviour
         for (int i = 0; i < allenemies.Count; i++)
         {
             var enemy = allenemies[i];
-            DebugManager.Log($"{name} targetOption: {enemy.Transform.name}, Distance: {enemy.Distance}");
+            DebugManager.Log($"{name} targetOption: {enemy.Transform.name}, Distance: {enemy.Distance}",3,"AI");
         }
 
         Transform target = allenemies.FirstOrDefault().Transform;
 
         if (target != null)
         {
-            DebugManager.Log($"Selected Target: {target.name}");
+            DebugManager.Log($"Selected Target: {target.name}",3,"AI");
         }
 
         return target;

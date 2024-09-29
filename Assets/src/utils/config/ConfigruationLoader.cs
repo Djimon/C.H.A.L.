@@ -56,6 +56,7 @@ public class ConfigurationLoader : MonoBehaviour
         {
             string[] configLines = File.ReadAllLines(path);
             debugConfig = new DebugConfig();
+            Debug.Log("Initialize DebugManager");
 
             foreach (string line in configLines)
             {

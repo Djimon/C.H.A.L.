@@ -4,12 +4,17 @@ using UnityEngine;
 
 public class CentralBank : MonoBehaviour
 {
-    private Dictionary<int, PlayerCurrencies> PlayerCurrencyDict;
+    private Dictionary<int, PlayerCurrencies> PlayerCurrencyDict = new Dictionary<int, PlayerCurrencies>();
+
+    private void Awake()
+    {
+        
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        PlayerCurrencyDict = new Dictionary<int, PlayerCurrencies>();
+        
     }
 
     // Update is called once per frame

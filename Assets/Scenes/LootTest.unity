@@ -132,10 +132,10 @@ GameObject:
   m_Component:
   - component: {fileID: 46013888}
   - component: {fileID: 46013887}
-  - component: {fileID: 46013889}
-  - component: {fileID: 46013891}
-  - component: {fileID: 46013890}
   - component: {fileID: 46013892}
+  - component: {fileID: 46013891}
+  - component: {fileID: 46013889}
+  - component: {fileID: 46013890}
   - component: {fileID: 46013893}
   m_Layer: 0
   m_Name: GameStart

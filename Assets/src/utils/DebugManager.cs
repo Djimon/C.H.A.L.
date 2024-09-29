@@ -46,8 +46,6 @@ public class DebugManager
         else if(!ActiveTags.Contains(tag)) 
         {
             ExcludedTags.Add(tag);
-            string excludedTagsString = string.Join(", ", ExcludedTags);
-            DebugManager.Log($"Ausgeschlossene Tags: {excludedTagsString}");
         }
     }
 
@@ -68,8 +66,6 @@ public class DebugManager
         else if (!ActiveTags.Contains(tag))
         {
             ExcludedTags.Add(tag);
-            string excludedTagsString = string.Join(", ", ExcludedTags);
-            DebugManager.Log($"Ausgeschlossene Tags: {excludedTagsString}");
         }
     }
 
@@ -90,8 +86,6 @@ public class DebugManager
         else if (!ActiveTags.Contains(tag))
         {
             ExcludedTags.Add(tag);
-            string excludedTagsString = string.Join(", ", ExcludedTags);
-            DebugManager.Log($"Ausgeschlossene Tags: {excludedTagsString}");
         }
     }
 
@@ -117,10 +111,12 @@ public class DebugManager
         if (isActive)
         {
             ActiveTags.Add(tag);
+            ExcludedTags.Remove(tag);
         }
         else
         {
             ActiveTags.Remove(tag);
+            ExcludedTags.Add(tag);
         }
     }
 

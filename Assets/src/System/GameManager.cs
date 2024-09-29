@@ -22,6 +22,9 @@ public class GameManager : MonoBehaviour
         centralBank.CreatePlayerCurrencies(1);
         centralBank.AddCurrencyForPLayer(1, "Gold", ECurrencyType.money, 100);
         centralBank.AddCurrencyForPLayer(1, "Seelenkristalle", ECurrencyType.special, 0, 1000);
+
+        gameData.gamestartet = true;
+        gameData.PlayerID = 1;
     }
 
     private void OnEnable()
@@ -106,6 +109,8 @@ public class GameManager : MonoBehaviour
 [Serializable]
 public class GameData
 {
+    public bool gamestartet;
+    public int PlayerID;
     public int totalEnemiesKilled;
     public int bossEnemiesKilled;
     public float totalDistanceTraveled;

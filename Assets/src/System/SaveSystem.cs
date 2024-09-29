@@ -16,9 +16,10 @@ public class SaveSystem : MonoBehaviour
     // Speichert die GameData als Binärdatei
     public void SaveGameData(GameData data)
     {
-        BinaryFormatter formatter = new BinaryFormatter();
+        
         using (FileStream stream = new FileStream(filePath, FileMode.Create))
         {
+            BinaryFormatter formatter = new BinaryFormatter();
             formatter.Serialize(stream, data);
             DebugManager.Log("Game data saved.");
         }
@@ -29,9 +30,16 @@ public class SaveSystem : MonoBehaviour
     {
         if (File.Exists(filePath))
         {
-            BinaryFormatter formatter = new BinaryFormatter();
+            
             using (FileStream stream = new FileStream(filePath, FileMode.Open))
             {
+                if (stream.Length == 0)
+                {
+                    DebugManager.Warning("Save file is empty, returning new GameData.", 1, "Game");
+                    return new GameData(); // Standardwerte zurückgeben, falls Datei leer ist
+                }
+
+                BinaryFormatter formatter = new BinaryFormatter();
                 GameData data = formatter.Deserialize(stream) as GameData;
                 DebugManager.Log("Game data loaded.");
                 return data;

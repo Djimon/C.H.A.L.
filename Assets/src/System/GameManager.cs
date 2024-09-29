@@ -7,11 +7,21 @@ public class GameManager : MonoBehaviour
 {
     private GameData gameData;
     private SaveSystem saveSystem;
+    private CentralBank centralBank;
 
     private void Awake()
     {
+        centralBank = GetComponent<CentralBank>();
         saveSystem = FindObjectOfType<SaveSystem>();
         gameData = saveSystem.LoadGameData();
+    }
+
+    public void Start()
+    {
+        //TODO: For each registered player
+        centralBank.CreatePlayerCurrencies(1);
+        centralBank.AddCurrencyForPLayer(1, "Gold", ECurrencyType.money, 100);
+        centralBank.AddCurrencyForPLayer(1, "Seelenkristalle", ECurrencyType.special, 0, 1000);
     }
 
     private void OnEnable()
@@ -42,43 +52,43 @@ public class GameManager : MonoBehaviour
     private void UpdateEnemyKilled()
     {
         gameData.totalEnemiesKilled++;
-        Debug.Log("Enemy killed");
+        DebugManager.Log("Enemy killed");
     }
 
     private void UpdateBossKilled()
     {
         gameData.bossEnemiesKilled++;
-        Debug.Log("Boss killed");
+        DebugManager.Log("Boss killed");
     }
 
     private void UpdateDistanceTraveled(float distance)
     {
         gameData.totalDistanceTraveled += distance;
-        Debug.Log($"Distance traveled: {distance}");
+        DebugManager.Log($"Distance traveled: {distance}");
     }
 
     private void UpdateLootCollected(int amount)
     {
         gameData.totalLootCollected += amount;
-        Debug.Log($"Loot collected: {amount}");
+        DebugManager.Log($"Loot collected: {amount}");
     }
 
     private void UpdateLevelUp()
     {
         gameData.playerLevel++;
-        Debug.Log("Level up!");
+        DebugManager.Log("Level up!");
     }
 
     private void UpdateGamePlayed()
     {
         gameData.totalGamesPlayed++;
-        Debug.Log("Game played");
+        DebugManager.Log("Game played");
     }
 
     private void UpdateSpellCast()
     {
         gameData.spellsCast++;
-        Debug.Log("Spell cast");
+        DebugManager.Log("Spell cast");
     }
 
     // Speichern der Statistiken
@@ -106,12 +116,12 @@ public class GameData
 
     public void PrintData()
     {
-        Debug.Log($"Total Enemies Killed: {totalEnemiesKilled}");
-        Debug.Log($"Boss Enemies Killed: {bossEnemiesKilled}");
-        Debug.Log($"Total Distance Traveled: {totalDistanceTraveled}");
-        Debug.Log($"Total Loot Collected: {totalLootCollected}");
-        Debug.Log($"Player Level: {playerLevel}");
-        Debug.Log($"Total Games Played: {totalGamesPlayed}");
-        Debug.Log($"Spells Cast: {spellsCast}");
+        DebugManager.Log($"Total Enemies Killed: {totalEnemiesKilled}");
+        DebugManager.Log($"Boss Enemies Killed: {bossEnemiesKilled}");
+        DebugManager.Log($"Total Distance Traveled: {totalDistanceTraveled}");
+        DebugManager.Log($"Total Loot Collected: {totalLootCollected}");
+        DebugManager.Log($"Player Level: {playerLevel}");
+        DebugManager.Log($"Total Games Played: {totalGamesPlayed}");
+        DebugManager.Log($"Spells Cast: {spellsCast}");
     }
 }

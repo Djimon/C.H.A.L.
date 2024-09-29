@@ -30,10 +30,10 @@ public enum ERarityLevel
 //    {
 //        // Example of creating an "Item"
 //        Item helmet = new Item("Iron Helmet", ERarityLevel.Rare, "helmet.png", EAnchorType.Head, ESizeType.Medium);
-//        Debug.Log(helmet.GetItemDetails());
+//        DebugManager.Log(helmet.GetItemDetails());
 
 //        // Example of creating a "PowerUp"
 //        PowerUp strengthBoost = new PowerUp("Strength Boost", ERarityLevel.Epic, "powerup.png", "Increases strength", 20f, 30f);
-//        Debug.Log(strengthBoost.GetItemDetails());
+//        DebugManager.Log(strengthBoost.GetItemDetails());
 //    }
 //}

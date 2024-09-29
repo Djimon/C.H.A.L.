@@ -15,14 +15,14 @@ public class ItemRegistry : MonoBehaviour
         {
             if(itemDictionary.ContainsKey(item.itemName))
             {
-                Debug.LogWarning($"Item with name '{item.itemName}' already exists. skipping duplicates.");
+                DebugManager.Warning($"Item with name '{item.itemName}' already exists. skipping duplicates.", 2, "Items");
                 continue;
             }
             itemDictionary.Add(item.itemName, item);
-            Debug.Log($"Item '{item.itemName}' loaded");
+            DebugManager.Log($"Item '{item.itemName}' loaded");
         }
 
-        Debug.Log($"Loaded {allItems.Length} items from the Items folder.");
+        DebugManager.Log($"Loaded {allItems.Length} items from the Items folder.");
     }
 
     public ScriptableItemBase GetItemByName(string itemName)
@@ -33,7 +33,7 @@ public class ItemRegistry : MonoBehaviour
             return item;
         }
 
-        Debug.LogWarning($"Item with name '{itemName}' not found in registry.");
+        DebugManager.Warning($"Item with name '{itemName}' not found in registry.", 1, "Items");
         return null;
     }
 

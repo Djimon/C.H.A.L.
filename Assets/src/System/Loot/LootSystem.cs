@@ -28,29 +28,29 @@ public class LootSystem : MonoBehaviour
         lootTables = new List<LootTable>();
 
         TextAsset[] jsonFiles = Resources.LoadAll<TextAsset>("lootTables");
-        Debug.Log($"{jsonFiles.Length} JSON files found in the lootTables folder.");
+        DebugManager.Log($"{jsonFiles.Length} JSON files found in the lootTables folder.");
 
         foreach (var file in jsonFiles)
         {
 
             if (file == null)
             {
-                Debug.LogWarning($"Failed to load resource at path Ressourcs/lootTables");
+                DebugManager.Warning($"Failed to load resource at path Ressourcs/lootTables",2,"Items");
                 continue;
             }
 
-            //Debug.Log(file.text); //output the json-text
+            //DebugManager.Log(file.text); //output the json-text
 
             LootTable lt = deserializer.LoadLootTable(file,itemRegistry);
             if (lt != null)
             {
                 lootTables.Add(lt);
                 //lt.register(); //eventually not neccasary, cine alreade registered during Deserialization
-                Debug.Log($"regsitration of file {file.name} successfull.");
+                DebugManager.Log($"regsitration of file {file.name} successfull.");
             }
             else
             {
-                Debug.LogError($"Failed to deserialize JSON for file: {file.name}");
+                DebugManager.Error($"Failed to deserialize JSON for file: {file.name}",2,"Items");
             }                     
         }    
     }
@@ -80,12 +80,12 @@ public class LootSystem : MonoBehaviour
                 for (int i = 0; i < pool.rolls; i++)
                 {
                     Entry selectedItem = GetRandomPrecomputedItemFromPool(pool.referringPreComputedPool);
-                    Debug.Log($"looking for {selectedItem.name} ({selectedItem.instanceName}).");
+                    DebugManager.Log($"looking for {selectedItem.name} ({selectedItem.instanceName}).");
                     ScriptableItemBase item = itemRegistry.GetItemByName(selectedItem.instanceName);
                     if (item != null)
                     {
-                        Debug.Log($"Item Dropped: {selectedItem.name}, Quantity: {selectedItem.quantity}");
-                        Debug.Log($"Item Details: {item.GetItemDetails()}");
+                        DebugManager.Log($"Item Dropped: {selectedItem.name}, Quantity: {selectedItem.quantity}");
+                        DebugManager.Log($"Item Details: {item.GetItemDetails()}");
 
                         //TODO: Add Item to inventory
 
@@ -121,7 +121,7 @@ public class LootSystem : MonoBehaviour
 
     private bool LogUnknownCondition(string condType)
     {
-        Debug.LogWarning($"Unknown condition type: {condType}");
+        DebugManager.Warning($"Unknown condition type: {condType}",2,"Items");
         return false;
     }
 
@@ -149,7 +149,7 @@ public class LootSystem : MonoBehaviour
 
     private bool LogUnknownTimeCondition(string time)
     {
-        Debug.LogWarning($"Unknown time condition value: {time}");
+        DebugManager.Warning($"Unknown time condition value: {time}", 2, "Items");
         return false;
     }
 

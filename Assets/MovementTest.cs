@@ -17,7 +17,7 @@ public class Movement : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         currentTarget = mainTarget; // Start by moving towards the main target
         agent.SetDestination(currentTarget.position);
-        Debug.Log($"Target locked: {currentTarget.position}");
+        DebugManager.Log($"Target locked: {currentTarget.position}");
     }
 
     void Update()
@@ -28,19 +28,19 @@ public class Movement : MonoBehaviour
         {
             if (hitCollider.CompareTag("Entity") && hitCollider.transform != this.transform) // Assuming enemies have the tag "Enemy"
             {
-                //Debug.Log($"Object in ragne: {hitCollider.gameObject.name}");
+                //DebugManager.Log($"Object in ragne: {hitCollider.gameObject.name}");
                 Movement enemy = hitCollider.GetComponent<Movement>();
                 if (enemy !=null && enemy.TeamNumber != TeamNumber)
                 {
                     //for later
                     float distance = Vector3.Distance(transform.position, hitCollider.transform.position);
-                    Debug.Log($"Distance to {enemy.name}: {distance}");
+                    DebugManager.Log($"Distance to {enemy.name}: {distance}");
                     Transform newTarget = hitCollider.transform;
                     // Move towards the current target
                     if (newTarget != null && newTarget != currentTarget)
                     {
                         agent.SetDestination(newTarget.position);
-                        Debug.Log($"{gameObject.name} target switched: {newTarget.position} ({newTarget.gameObject.name})");
+                        DebugManager.Log($"{gameObject.name} target switched: {newTarget.position} ({newTarget.gameObject.name})");
                     }
                 }
 

@@ -14,7 +14,7 @@ public class EvenTest : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.K))
         {
             EventManager.TriggerEnemyKilled(); // Normaler Gegner getötet
-            Debug.Log("Pressed K");
+            DebugManager.Log("Pressed K");
         }
         if (Input.GetKeyDown(KeyCode.B))
         {

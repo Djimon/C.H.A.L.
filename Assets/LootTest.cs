@@ -19,17 +19,21 @@ public class LootTest : MonoBehaviour
     {
         col = this.GetComponentInChildren<Collider>();
         rig = this.GetComponentInChildren<Rigidbody>();
-        Debug.Log($"Collider: {col.gameObject.name} detected");
-        Debug.Log($"Rigidbody: {rig.gameObject.name} detected");
+        DebugManager.Log($"Collider: {col.gameObject.name} detected");
+        DebugManager.Log($"Rigidbody: {rig.gameObject.name} detected");
 
         lootsystem = FindObjectOfType<LootSystem>();
 
         List<LootTable> ltl = lootsystem.GetLootTablesByType(ELootTableType.Chest);
-        Debug.Log(ltl.Count);
+        DebugManager.Log(ltl.Count.ToString());
         if(ltl.Count > 0 )
         {
             lootTable = ltl[0];
         }
+
+        DebugManager.Log("Test1", 3, "Test");
+        DebugManager.Log("Test2", 3, "Loot");
+        DebugManager.Log("Test3", 2, "Achievement");
 
     }
 

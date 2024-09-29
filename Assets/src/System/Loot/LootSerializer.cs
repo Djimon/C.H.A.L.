@@ -9,14 +9,14 @@ public class LootSerializer
     {
         if (File.Exists(filePath))
         {
-            Debug.LogWarning($"LootTable not saved. File already exists at {filePath}");
+            DebugManager.Log($"LootTable not saved. File already exists at {filePath}",2);
             return; // Wenn die Datei existiert, verlasse die Methode ohne zu speichern
         }
 
         int value = (int)lootTable.type;
         var enumname = (ELootTableType)value;
         string enumnamestring = enumname.ToString();
-        Debug.Log($"{value} - {enumname} - {enumnamestring}");
+        DebugManager.Log($"{value} - {enumname} - {enumnamestring}");
         //droppt das property name, das nur für den filePath benötigt wird
         ProcessedLootTable rawLootTable = new ProcessedLootTable()
         {
@@ -29,7 +29,7 @@ public class LootSerializer
 
         // Speichere die JSON-Datei
         File.WriteAllText(filePath, json);
-        Debug.Log($"LootTable saved to {filePath}");
+        DebugManager.Log($"LootTable saved to {filePath}");
     }
 
    

@@ -23,7 +23,7 @@ public class LootDeserializer
             pools = new List<Pool>()
         };
 
-        Debug.Log($"raw Type = {rawLootTable.type}, pools: {rawLootTable.pools.Count}");
+        DebugManager.Log($"raw Type = {rawLootTable.type}, pools: {rawLootTable.pools.Count}");
 
         //lootTable.register();
 
@@ -56,7 +56,7 @@ public class LootDeserializer
                 }
                 else
                 {
-                    Debug.LogWarning($"Item with name '{entry.instanceName}' doesn't exist.");
+                    DebugManager.Warning($"Item with name '{entry.instanceName}' doesn't exist.", 2, "Items");
                     pool.entries.Add(new Entry { name = "missing_"+entry.instanceName, weight = 0, quantity = 0, itemType = EItemType.none, instanceName = "missing" });
                     //TODO: Save as scriptable Object in new path
 
@@ -84,7 +84,7 @@ public class LootDeserializer
         lootTable.register();  // Register type and preprocess pools
 
         // Now you can use the populated LootTable
-        Debug.Log("LootTable successfully loaded and processed.");
+        DebugManager.Log("LootTable successfully loaded and processed.");
         return lootTable;
     }
 
@@ -119,7 +119,7 @@ public class LootDeserializer
         AssetDatabase.CreateAsset(asset, relativePath);
         AssetDatabase.SaveAssets();
 
-        Debug.Log($"ScriptableObject for missing item '{instanceName}' saved under Ressources/items/{folder}/_missing/.");
+        DebugManager.Log($"ScriptableObject for missing item '{instanceName}' saved under Ressources/items/{folder}/_missing/.");
     }
 }
 

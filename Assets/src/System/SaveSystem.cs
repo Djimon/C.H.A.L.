@@ -20,7 +20,7 @@ public class SaveSystem : MonoBehaviour
         using (FileStream stream = new FileStream(filePath, FileMode.Create))
         {
             formatter.Serialize(stream, data);
-            Debug.Log("Game data saved.");
+            DebugManager.Log("Game data saved.");
         }
     }
 
@@ -33,13 +33,13 @@ public class SaveSystem : MonoBehaviour
             using (FileStream stream = new FileStream(filePath, FileMode.Open))
             {
                 GameData data = formatter.Deserialize(stream) as GameData;
-                Debug.Log("Game data loaded.");
+                DebugManager.Log("Game data loaded.");
                 return data;
             }
         }
         else
         {
-            Debug.LogWarning("Save file not found, returning new GameData.");
+            DebugManager.Warning("Save file not found, returning new GameData.",1,"Game");
             return new GameData(); // Standardwerte zurückgeben, falls Datei nicht existiert
         }
     }
@@ -50,11 +50,11 @@ public class SaveSystem : MonoBehaviour
         if (File.Exists(filePath))
         {
             File.Delete(filePath);
-            Debug.Log("Game data deleted.");
+            DebugManager.Log("Game data deleted.");
         }
         else
         {
-            Debug.LogWarning("No save file to delete.");
+            DebugManager.Warning("No save file to delete.",1,"");
         }
     }
 }

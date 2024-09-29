@@ -29,12 +29,12 @@ public class LootTable
             lootType = (ELootTableType)result;
             PrecomputePools();
             //TODO: Register to global LootManager
-            Debug.Log($"LootTable for {lootType.ToString()} registered.");
+            DebugManager.Log($"LootTable for {lootType.ToString()} registered.");
         }
         else
         {
             lootType = ELootTableType.TypeUnkown;
-            Debug.LogWarning($"LootTable has invalid LootType '{type}'. LootTable will not be applied!");
+            DebugManager.Warning($"LootTable has invalid LootType '{type}'. LootTable will not be applied!", 2, "Items");
         }  
         
     }
@@ -113,7 +113,7 @@ public class Entry
         var split = name.Split(':');
         if (split.Length != 2)
         {
-            Debug.LogError($"Loot Entry ha invalid name {name}.");
+            DebugManager.Error($"Loot Entry has invalid name {name}.",2,"Items");
             return;
         }
             
@@ -125,7 +125,7 @@ public class Entry
         else
         {
             itemType = EItemType.none;
-            Debug.LogWarning($"Loot Entry has unknown ItemType '{split[0]}'. Entry will be ignored!");
+            DebugManager.Warning($"Loot Entry has unknown ItemType '{split[0]}'. Entry will be ignored!",2,"Items");
         }
 
         instanceName = split[1];

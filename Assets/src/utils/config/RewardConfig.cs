@@ -7,7 +7,7 @@ using UnityEngine;
 public class RewardConfig
 {
     public BaseRewards baseRewards;
-    public Rewards rewards;
+    public Dictionary<string, Dictionary<string, RewardModifiers>> rewards;
 }
 
 [System.Serializable]
@@ -18,18 +18,18 @@ public class BaseRewards
     public int Crystals;
 }
 
-[System.Serializable]
-public class RewardSize
-{
-    public float Gold;
-    public float XP;
-    public float Crystals;
-}
+
 
 [System.Serializable]
-public class Rewards
+public class RewardModifiers
 {
-    public Dictionary<string, Dictionary<string, RewardSize>> rewards;
+    public Dictionary<string, string> modifiers;
+
+    public int Gold;
+    public int XP;
+    public int Crystals;
 }
+
+
 
 

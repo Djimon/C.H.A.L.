@@ -4,7 +4,7 @@
         "XP": 50,
         "Crystals": 0
     },
-    "rewards": {
+    "rewardModifier": {
         "Chitinoid": {
             "small": {
                 "Gold": 1.1,

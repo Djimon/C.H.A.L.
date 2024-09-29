@@ -26,12 +26,13 @@ public class PlayerCurrencies
         if (currencies.ContainsKey(currencyName))
         {
             rest = currencies[currencyName].Add(amount);
+            DebugManager.Log($"{amount} {currencyName} was given to player.",2,"Info",Color.green);
         }
 
         if (rest > 0)
         {
             //TODO: Do somthing with the rest, e.g. Lokc in Tresor
-            DebugManager.Log($"max Capacity of {currencyName} reached. rest of {rest} is gone!");
+            DebugManager.Log($"max Capacity of {currencyName} reached. rest of {rest} is gone!",2,"Info");
         }
     }
 

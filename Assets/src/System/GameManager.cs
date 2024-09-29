@@ -6,16 +6,27 @@ using UnityEngine;
 [RequireComponent(typeof(SaveSystem))]
 [RequireComponent(typeof(ConfigurationLoader))]
 [RequireComponent(typeof(CentralBank))]
+[RequireComponent(typeof(InventoryManager))]
+[RequireComponent(typeof(LootSystem))]
+[RequireComponent(typeof(RewardSystem))]
 public class GameManager : MonoBehaviour
 {
     private GameData gameData;
     private SaveSystem saveSystem;
     private CentralBank centralBank;
+    private InventoryManager inventoryManager;
+    private LootSystem lootSystem;
+    private RewardSystem rewardSystem;
+    private ConfigurationLoader configurationLoader;
 
     private void Awake()
     {
         centralBank = GetComponent<CentralBank>();
         saveSystem = GetComponent<SaveSystem>();
+        inventoryManager = GetComponent<InventoryManager>();
+        lootSystem = GetComponent<LootSystem>();
+        rewardSystem = GetComponent<RewardSystem>();
+        configurationLoader = GetComponent<ConfigurationLoader>();
         gameData = saveSystem.LoadGameData();
     }
 
@@ -23,17 +34,24 @@ public class GameManager : MonoBehaviour
     {
         //TODO: For each registered player
         centralBank.CreatePlayerCurrencies(1);
+        centralBank.AddCurrencyForPLayer(1, "XP", ECurrencyType.reward);
         centralBank.AddCurrencyForPLayer(1, "Gold", ECurrencyType.money, 100);
         centralBank.AddCurrencyForPLayer(1, "Seelenkristalle", ECurrencyType.special, 0, 1000);
 
+        inventoryManager.CreatePlayerInventory(1);
+
         gameData.gamestartet = true;
         gameData.PlayerID = 1;
+
+        UpdateRewardSystem(configurationLoader.rewardData);
     }
 
     private void OnEnable()
     {
-        // Events abonnieren
-        EventManager.OnEnemyKilled += UpdateEnemyKilled;
+        //Fertige Events abonieren
+        EventManager.OnUnitKilled += UpdateUnitKilled;
+
+        //Beispiel-Events abonnieren
         EventManager.OnBossKilled += UpdateBossKilled;
         EventManager.OnDistanceTraveled += UpdateDistanceTraveled;
         EventManager.OnLootCollected += UpdateLootCollected;
@@ -44,14 +62,28 @@ public class GameManager : MonoBehaviour
 
     private void OnDisable()
     {
-        // Events abbestellen
-        EventManager.OnEnemyKilled -= UpdateEnemyKilled;
+        //fertige Ebents abbestellen
+        EventManager.OnUnitKilled -= UpdateUnitKilled;
+
+        //Beispiel-Events abbestellen
         EventManager.OnBossKilled -= UpdateBossKilled;
         EventManager.OnDistanceTraveled -= UpdateDistanceTraveled;
         EventManager.OnLootCollected -= UpdateLootCollected;
         EventManager.OnLevelUp -= UpdateLevelUp;
         EventManager.OnGamePlayed -= UpdateGamePlayed;
         EventManager.OnSpellCast -= UpdateSpellCast;
+    }
+
+    private void UpdateUnitKilled(Unit unit, EMonsterType type, EUnitSize size)
+    {
+        lootSystem.AddLootFromMobKill(unit.TeamNumber, type);
+        centralBank.GivePlayerCurrency(1, "XP", rewardSystem.RewardXP(type, size));
+        centralBank.GivePlayerCurrency(1, "Gold", rewardSystem.RewardGold(type, size));
+        centralBank.GivePlayerCurrency(1, "Crystals", rewardSystem.RewardCrystals(type, size));
+        
+        gameData.totalEnemiesKilled++;
+        gameData.UpdateMonsterStats(type, 1);
+
     }
 
     // Event-Handler-Methoden zur Aktualisierung der Statistiken
@@ -107,29 +139,12 @@ public class GameManager : MonoBehaviour
     {
         SaveGame();
     }
-}
 
-[Serializable]
-public class GameData
-{
-    public bool gamestartet;
-    public int PlayerID;
-    public int totalEnemiesKilled;
-    public int bossEnemiesKilled;
-    public float totalDistanceTraveled;
-    public int totalLootCollected;
-    public int playerLevel;
-    public int totalGamesPlayed;
-    public int spellsCast;
-
-    public void PrintData()
+    public void UpdateRewardSystem(RewardConfig config)
     {
-        DebugManager.Log($"Total Enemies Killed: {totalEnemiesKilled}");
-        DebugManager.Log($"Boss Enemies Killed: {bossEnemiesKilled}");
-        DebugManager.Log($"Total Distance Traveled: {totalDistanceTraveled}");
-        DebugManager.Log($"Total Loot Collected: {totalLootCollected}");
-        DebugManager.Log($"Player Level: {playerLevel}");
-        DebugManager.Log($"Total Games Played: {totalGamesPlayed}");
-        DebugManager.Log($"Spells Cast: {spellsCast}");
+        rewardSystem.rewardConfig = new RewardConfig();
+        rewardSystem.rewardConfig.baseRewards = config.baseRewards;
+        rewardSystem.rewardConfig.rewards = config.rewards;
     }
 }
+

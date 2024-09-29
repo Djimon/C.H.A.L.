@@ -1743,6 +1743,10 @@ GameObject:
   - component: {fileID: 1673916115}
   - component: {fileID: 1673916117}
   - component: {fileID: 1673916118}
+  - component: {fileID: 1673916119}
+  - component: {fileID: 1673916122}
+  - component: {fileID: 1673916121}
+  - component: {fileID: 1673916120}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1762,11 +1766,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 230ee5cca478295409af4bf05eae6907, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameManager: {fileID: 0}
   rarityConfig:
     Rarities: []
   debugConfig:
     DebugLevel: 1
     ProductiveMode: 0
+  rewardData:
+    baseRewards:
+      Gold: 0
+      XP: 0
+      Crystals: 0
 --- !u!4 &1673916114
 Transform:
   m_ObjectHideFlags: 0
@@ -1830,6 +1840,61 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5856b59ac796b8c4d8b6e78d34a1ddf4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1673916119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1673916112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e117a53a8a7769346a5fd901380391d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1673916120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1673916112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8195735a70963d044869cb7be7982c27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1673916121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1673916112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c874b66875e0923498e8e6275b15ec3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rewardConfig:
+    baseRewards:
+      Gold: 0
+      XP: 0
+      Crystals: 0
+--- !u!114 &1673916122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1673916112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b8f949fc752feb4598f3273236af191, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemRegistry: {fileID: 1673916120}
+  lootTables: []
 --- !u!1 &1920145479
 GameObject:
   m_ObjectHideFlags: 0

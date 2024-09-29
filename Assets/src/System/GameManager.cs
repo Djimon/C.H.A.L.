@@ -8,7 +8,6 @@ using UnityEngine;
 [RequireComponent(typeof(CentralBank))]
 [RequireComponent(typeof(InventoryManager))]
 [RequireComponent(typeof(LootSystem))]
-[RequireComponent(typeof(RewardSystem))]
 public class GameManager : MonoBehaviour
 {
     private GameData gameData;
@@ -16,8 +15,8 @@ public class GameManager : MonoBehaviour
     private CentralBank centralBank;
     private InventoryManager inventoryManager;
     private LootSystem lootSystem;
-    private RewardSystem rewardSystem;
     private ConfigurationLoader configurationLoader;
+
 
     private void Awake()
     {
@@ -25,7 +24,6 @@ public class GameManager : MonoBehaviour
         saveSystem = GetComponent<SaveSystem>();
         inventoryManager = GetComponent<InventoryManager>();
         lootSystem = GetComponent<LootSystem>();
-        rewardSystem = GetComponent<RewardSystem>();
         configurationLoader = GetComponent<ConfigurationLoader>();
         gameData = saveSystem.LoadGameData();
     }
@@ -43,7 +41,6 @@ public class GameManager : MonoBehaviour
         gameData.gamestartet = true;
         gameData.PlayerID = 1;
 
-        UpdateRewardSystem(configurationLoader.rewardData);
     }
 
     private void OnEnable()
@@ -77,9 +74,9 @@ public class GameManager : MonoBehaviour
     private void UpdateUnitKilled(Unit unit, EMonsterType type, EUnitSize size)
     {
         lootSystem.AddLootFromMobKill(unit.TeamNumber, type);
-        centralBank.GivePlayerCurrency(1, "XP", rewardSystem.RewardXP(type, size));
-        centralBank.GivePlayerCurrency(1, "Gold", rewardSystem.RewardGold(type, size));
-        centralBank.GivePlayerCurrency(1, "Crystals", rewardSystem.RewardCrystals(type, size));
+        centralBank.GivePlayerCurrency(1, "XP",configurationLoader.CalculateReward(type,size,"XP"));
+        centralBank.GivePlayerCurrency(1, "Gold", configurationLoader.CalculateReward(type, size, "Gold"));
+        centralBank.GivePlayerCurrency(1, "Crystals", configurationLoader.CalculateReward(type, size, "Crystals"));
         
         gameData.totalEnemiesKilled++;
         gameData.UpdateMonsterStats(type, 1);
@@ -140,11 +137,5 @@ public class GameManager : MonoBehaviour
         SaveGame();
     }
 
-    public void UpdateRewardSystem(RewardConfig config)
-    {
-        rewardSystem.rewardConfig = new RewardConfig();
-        rewardSystem.rewardConfig.baseRewards = config.baseRewards;
-        rewardSystem.rewardConfig.rewards = config.rewards;
-    }
 }
 

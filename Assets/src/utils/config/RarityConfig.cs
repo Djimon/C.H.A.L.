@@ -15,3 +15,4 @@ public class RarityConfig
 {
     public List<RarityConfigEntry> Rarities;
 }
+

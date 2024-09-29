@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using static DebugManager;
 using static UnityEditor.Progress;
@@ -10,11 +11,12 @@ public class ConfigurationLoader : MonoBehaviour
 {
     public static ConfigurationLoader Instance { get; private set; }
 
-    public GameManager gameManager;
+    private GameManager gameManager;
 
     public RarityConfig rarityConfig;
     public DebugConfig debugConfig;
-    public RewardConfig rewardData;
+    public RewardConfig rewardConfig;
+    public RawRewardConfig tempRewardConfig;
 
     private void Awake()
     {
@@ -26,6 +28,7 @@ public class ConfigurationLoader : MonoBehaviour
 
             LoadRarityConfig();
             LoadDebugConfig();
+            LoadRewardsConfig();
         }
 
         gameManager = GetComponent<GameManager>();
@@ -99,7 +102,43 @@ public class ConfigurationLoader : MonoBehaviour
         if (File.Exists(path))
         {
             string json = File.ReadAllText(path);
-            rewardData = JsonUtility.FromJson<RewardConfig>(json);
+            tempRewardConfig = JsonUtility.FromJson<RawRewardConfig>(json);
+            rewardConfig = new RewardConfig
+            {
+                baseRewards = tempRewardConfig.baseRewards,
+                rewardModifiers = new List<RewardModifierEntry>()
+            };
+
+            foreach(RawRewardModifiers rawModifiers in tempRewardConfig.RewardMultilpier)
+            {
+                RewardModifierEntry entry = new RewardModifierEntry
+                {
+                    monsterType = rawModifiers.monsterType,
+                    modifiers = new List<RewardModifiers>()
+                };
+
+
+                foreach(RawRewardSizes rawSize in rawModifiers.monsterSize)
+                {
+                    RewardModifiers modifier = new RewardModifiers
+                    {
+                        unitSize = rawSize.size,
+                        XP = rawSize.rewardModifiers.XP,
+                        Gold = rawSize.rewardModifiers.Gold,
+                        Crystals = rawSize.rewardModifiers.Crystals,
+                    };
+
+                    entry.modifiers.Add(modifier);
+
+                }
+
+                rewardConfig.rewardModifiers.Add(entry);
+
+            }
+
+            
+
+
             Debug.Log("Rewards config loaded successfully!");
         }
         else
@@ -118,7 +157,56 @@ public class ConfigurationLoader : MonoBehaviour
         Debug.Log("Rewards config saved successfully to " + path);
     }
 
+    public int CalculateReward(EMonsterType monsterType, EUnitSize monsterSize, string rewardType)
+    {
+        // Basisbelohnung für diesen Reward-Typ (Gold, XP, Crystals)
+        float baseReward = GetBaseReward(rewardType);
+        string monsterTypeKey = monsterType.ToString();
+        string monsterSizeKey = monsterSize.ToString();
 
+        var modifier = rewardConfig.rewardModifiers
+        .FirstOrDefault(entry => entry.monsterType == monsterTypeKey)?
+        .modifiers.FirstOrDefault(mod => mod.unitSize == monsterSizeKey);
+
+        if (modifier != null)
+        {
+            // Wende den entsprechenden Modifikator an, falls er vorhanden ist
+            float multiplier = GetMultiplier(modifier, rewardType);
+            return (int)MathF.Round(baseReward * multiplier, 0);
+        }
+
+        return (int)baseReward;
+    }
+
+    private float GetBaseReward(string rewardType)
+    {
+        switch (rewardType)
+        {
+            case "Gold":
+                return rewardConfig.baseRewards.Gold;
+            case "XP":
+                return rewardConfig.baseRewards.XP;
+            case "Crystals":
+                return rewardConfig.baseRewards.Crystals;
+            default:
+                return 0;
+        }
+    }
+
+    private float GetMultiplier(RewardModifiers modifiers, string rewardType)
+    {
+        switch (rewardType)
+        {
+            case "Gold":
+                return modifiers.Gold;
+            case "XP":
+                return modifiers.XP;
+            case "Crystals":
+                return modifiers.Crystals;
+            default:
+                return 0;
+        }
+    }
 
 
     private void OnDisable()

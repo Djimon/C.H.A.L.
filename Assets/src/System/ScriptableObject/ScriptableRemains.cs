@@ -1,15 +1,21 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NewPowerUp", menuName = "Items/Remains")]
-public class ScriptablePowerUp : ScriptableItemBase
+[CreateAssetMenu(fileName = "NewRemains", menuName = "Items/Remains")]
+public class ScriptableRemains : ScriptableItemBase
 {
-    public string effectText;
-    public float value;
-    public float duration;
+    public int sourceMonsterID;
+    public float SellValue = 0; //how much Gold you get for this
+    public float ExchangeCost = 1; //cost to exchange other Remains to this.
+
+    public override Item CreateInstance()
+    {
+        return new Remains(name, rarity,image, sourceMonsterID, SellValue, ExchangeCost);
+    }
+
 
     // Override to provide PowerUp-specific details
     public override string GetItemDetails()
     {
-        return $"{itemName} (Rarity: {rarity}) - Effect: {effectText}, Value: {value}, Duration: {duration} seconds";
+        return $"{itemName} (Rarity: {rarity}) - Sell value: {SellValue} Gold, ExchangeCost: {ExchangeCost}";
     }
 }

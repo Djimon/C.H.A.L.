@@ -6,6 +6,7 @@ public class Reptiloid : Unit
 {
     private float RangeCooldown = 3.5f;
 
+
     protected override void Awake()
     {
         base.Awake();
@@ -15,7 +16,8 @@ public class Reptiloid : Unit
     // Start is called before the first frame update
     void Start()
     {
-        
+        MonsterData.monsterType = EMonsterType.Reptiloid;
+        MonsterData.monsterUnitSize = UnitSize;
     }
 
     // Update is called once per frame

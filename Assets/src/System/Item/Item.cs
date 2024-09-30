@@ -12,6 +12,8 @@ public abstract class Item
 
     // Abstract method to get detailed info about the item
     public abstract string GetItemDetails();
+
+    public abstract EItemType GetItemType();
 }
 
 // Enumeration for rarity levels

@@ -1,10 +1,15 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewItem", menuName = "Items/Parts")]
-public class ScriptableParts : ScriptableItemBase
+public class ScriptableModule : ScriptableItemBase
 {
     public EAnchorType anchor;
-    public ESizeType size;
+    public EModuleSize size;
+
+    public override Item CreateInstance()
+    {
+        return new Module(name, rarity, image,anchor, size);
+    }
 
     // Override to provide item-specific details
     public override string GetItemDetails()

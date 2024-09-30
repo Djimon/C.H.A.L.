@@ -42,7 +42,7 @@ public class DebugConfig
                 string[] excludedtags = value.Split(',');
                 foreach (string tag in excludedtags)
                 {
-                    ExcludedTags.Add(tag.Trim());
+                    //ExcludedTags.Add(tag.Trim());
                 }
                 break;
             default:

@@ -10,7 +10,8 @@ public class DebugManager
     {
         Production = 1,
         Test = 2,
-        Debug = 3
+        Dev = 3,
+        Debug = 4
     }
     // Globale Einstellungen
     public static EDebugLevel CurrentDebugLevel = EDebugLevel.Production;

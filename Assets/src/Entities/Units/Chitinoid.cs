@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class Chitinoid : Unit
 {
-
     //TODO: Get rid of MAgic Cosntants
     public float MeleeCooldown = 2f;
-    
+
+
     protected override void Awake()
     {
         base.Awake();
@@ -17,7 +17,8 @@ public class Chitinoid : Unit
     // Start is called before the first frame update
     void Start()
     {
-        
+        MonsterData.monsterType = EMonsterType.Chitinoid;
+        MonsterData.monsterUnitSize = UnitSize;
     }
 
     // Update is called once per frame

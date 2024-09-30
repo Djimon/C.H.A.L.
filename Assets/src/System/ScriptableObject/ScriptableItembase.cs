@@ -9,4 +9,6 @@ public abstract class ScriptableItemBase : ScriptableObject
 
     // Abstract method for getting details specific to the item
     public abstract string GetItemDetails();
+
+    public abstract Item CreateInstance();
 }

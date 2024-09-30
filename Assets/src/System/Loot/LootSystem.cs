@@ -21,20 +21,25 @@ public class LootSystem : MonoBehaviour
         Initilize();
     }
 
-    public void AddLootFromMobKill(int playerID, EMonsterType victimMonsterType)
+    public List<Item> GetLootFromMobKill(int playerID, MonsterData victim)
     {
         //TODO: implement
-        //LootTable table = FindLootTable(victimMonsterType);
-        //List<Item> loot = RollLootTable(table);
-        // TODO:
-        // Add Items do PlayerInventory
-        DebugManager.Log($"Player {playerID} gets loot from killing {victimMonsterType}", 2, "Info", Color.green);
-
+        LootTable lootTable = FindLootTablebyName(victim.lootTableName);
+        List<Item> loot = RollLootTable(lootTable);
+        
+        DebugManager.Log($"Player {playerID} gets {loot.Count} loot from killing {victim.monsterName}", 2, "Info", Color.green);
+        return loot;
     }
+
+    public LootTable FindLootTablebyName(string name)
+    {
+        return lootTables.FirstOrDefault(lootTable => lootTable.Name == name);
+    } 
 
     private LootTable FindLootTable(EMonsterType victimMonsterType)
     {
         //TODO: implement
+        //if can't find: take standard LootTable
         throw new NotImplementedException();
     }
 
@@ -76,6 +81,11 @@ public class LootSystem : MonoBehaviour
     {
         float randValue = UnityEngine.Random.Range(0, pool.totalWeights);
 
+        if(pool.precomputedEntries.Count == 1)
+        {
+            return pool.precomputedEntries[0];
+        }
+
         // Schnelles Auffinden mittels Binary Search
         int index = pool.cumulativeWeights.BinarySearch(randValue);
 
@@ -92,6 +102,8 @@ public class LootSystem : MonoBehaviour
     {
         List<Item> loot = new List<Item>();
 
+        DebugManager.Log($"lootTable {lootTable} is rolled", 3, "Items");
+
         foreach (var pool in lootTable.pools)
         {
             if (CheckConditions(pool.conditions))
@@ -103,13 +115,10 @@ public class LootSystem : MonoBehaviour
                     ScriptableItemBase item = itemRegistry.GetItemByName(selectedItem.instanceName);
                     if (item != null)
                     {
-                        DebugManager.Log($"Item Dropped: {selectedItem.name}, Quantity: {selectedItem.quantity}");
-                        DebugManager.Log($"Item Details: {item.GetItemDetails()}");
+                        DebugManager.Log($"Item Dropped: {selectedItem.name}, Quantity: {selectedItem.quantity}",3,"Item");
+                        DebugManager.Log($"Item Details: {item.GetItemDetails()}",4,"Item");
 
-                        //TODO: Add Item to inventory
-                        //TODO: translate Entry into real Items an add them to inventory
-
-                        //loot.Add(item);
+                        loot.Add(item.CreateInstance());
 
                     }   
                 }

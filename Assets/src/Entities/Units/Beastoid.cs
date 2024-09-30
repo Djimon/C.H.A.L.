@@ -18,7 +18,8 @@ public class Beastoid : Unit
     // Start is called before the first frame update
     void Start()
     {
-
+        MonsterData.monsterType = EMonsterType.Beastoid;
+        MonsterData.monsterUnitSize = UnitSize;
     }
 
     // Update is called once per frame

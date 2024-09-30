@@ -6,24 +6,29 @@ using UnityEngine;
 // Specific class for items in the "PowerUp" category
 public class Remains : Item
 {
-    public string Text { get; set; }
-    public float Value { get; set; }
-    public float Time { get; set; }
+    public int sourceMonsterID;
+    public float SellValue = 0; //how much Gold you get for this
+    public float ExchangeCost = 1; //cost to exchange other Remains to this.
 
     // Constructor
-    public Remains(string name, ERarityLevel rarity, Sprite image, string text, float value, float time)
+    public Remains(string name, ERarityLevel rarity, Sprite image, int monsterID, float sellValue=0, float exchangeCost=1)
     {
         Name = name;
         Rarity = rarity;
         Image = image;
-        Text = text;
-        Value = value;
-        Time = time;
+        sourceMonsterID = monsterID;
+        SellValue = sellValue;
+        ExchangeCost = exchangeCost;
     }
 
     // Implementing the abstract method
     public override string GetItemDetails()
     {
-        return $"{Name} (Rarity: {Rarity}) - Effect: {Text}, Value: {Value}, Time: {Time} seconds";
+        return $"{Name} (Rarity: {Rarity}) - from: {sourceMonsterID}, Value: {SellValue}, ExchangeCost: {ExchangeCost}";
+    }
+
+    public override EItemType GetItemType()
+    {
+        return EItemType.Remains;
     }
 }

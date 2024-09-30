@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -29,29 +30,40 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    public void AddItemForPlayer<T>(int playerID, EItemType itemType, T item) where T : Item
+    public void AddItemForPlayer(int playerID, Item item)
     {
         if (playerInventoryDict.ContainsKey(playerID))
         {
-            playerInventoryDict[playerID].AddItem(itemType, item);
+            playerInventoryDict[playerID].AddItem(item.GetItemType(), item);
+            DebugManager.Log($"{item.Name} was added to Player {playerID}", 3, "Items");
         }
     }
 
-    public void RemoveItemForPlayer<T>(int playerID, EItemType itemType, T item) where T : Item
+    public void RemoveItemForPlayer(int playerID, Item item) 
     {
         if (playerInventoryDict.ContainsKey(playerID))
         {
-            playerInventoryDict[playerID].RemoveItem(itemType, item);
+            playerInventoryDict[playerID].RemoveItem(item.GetItemType(), item);
         }
     }
 
-    public bool HasItemForPlayer<T>(int playerID, EItemType itemType, T item) where T : Item
+    public bool HasItemForPlayer(int playerID, Item item) 
     {
         if (playerInventoryDict.ContainsKey(playerID))
         {
-            return playerInventoryDict[playerID].HasItem(itemType, item);
+            return playerInventoryDict[playerID].HasItem(item.GetItemType(), item);
         }
 
         return false;
     }
+
+    internal void AddItemsForPlayer(int teamNumber, List<Item> items)
+    {
+        
+        foreach (Item item in items)
+        {
+            AddItemForPlayer(teamNumber, item);
+        }
+    }
+
 }

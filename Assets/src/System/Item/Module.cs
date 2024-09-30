@@ -10,7 +10,7 @@ public enum EAnchorType
 }
 
 // Different item sizes for the "Part" category
-public enum ESizeType
+public enum EModuleSize
 {
     Small,
     Medium,
@@ -21,10 +21,10 @@ public enum ESizeType
 public class Module : Item
 {
     public EAnchorType Anchor { get; set; }
-    public ESizeType Size { get; set; }
+    public EModuleSize Size { get; set; }
 
     // Constructor
-    public Module(string name, ERarityLevel rarity, Sprite image, EAnchorType anchor, ESizeType size)
+    public Module(string name, ERarityLevel rarity, Sprite image, EAnchorType anchor, EModuleSize size)
     {
         Name = name;
         Rarity = rarity;
@@ -37,5 +37,10 @@ public class Module : Item
     public override string GetItemDetails()
     {
         return $"{Name} (Rarity: {Rarity}) - Anchor: {Anchor}, Size: {Size}";
+    }
+
+    public override EItemType GetItemType()
+    {
+        return EItemType.Module;
     }
 }

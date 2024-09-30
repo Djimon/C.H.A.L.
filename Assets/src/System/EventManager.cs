@@ -7,7 +7,7 @@ public static class EventManager
 {
 
     //"echte"" Event
-    public static event Action<Unit, EMonsterType, EUnitSize> OnUnitKilled;
+    public static event Action<Unit,MonsterData> OnUnitKilled;
 
     // Beispiel-Events für verschiedene Aktionen
     public static event Action OnBossKilled;
@@ -18,7 +18,7 @@ public static class EventManager
     public static event Action OnSpellCast;
 
     // Methoden, um "echte" Events auszulösen
-    public static void TriggerUnitKilled(Unit Killerunit,EMonsterType victimType, EUnitSize victimSize) => OnUnitKilled?.Invoke(Killerunit,victimType,victimSize);
+    public static void TriggerUnitKilled(Unit Killerunit,MonsterData victimData) => OnUnitKilled?.Invoke(Killerunit,victimData);
 
 
     //Beispiele

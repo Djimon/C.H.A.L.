@@ -444,6 +444,16 @@ MonoBehaviour:
   CombatFocus: 0
   MonsterType: -1
   TeamNumber: 2
+  MonsterData:
+    monsterID: 0
+    monsterName: test_monster_0
+    monsterType: 1
+    monsterUnitSize: 0
+    hasHorn: 0
+    hasStinger: 0
+    hasPincers: 0
+    hasPoison: 0
+    lootTableName: default_drop
   mainTarget: {fileID: 1920145480}
   MeleeCooldown: 2
 --- !u!195 &513633597
@@ -875,6 +885,16 @@ MonoBehaviour:
   CombatFocus: 0
   MonsterType: -1
   TeamNumber: 2
+  MonsterData:
+    monsterID: 0
+    monsterName: test_monster_0
+    monsterType: 1
+    monsterUnitSize: 0
+    hasHorn: 0
+    hasStinger: 0
+    hasPincers: 0
+    hasPoison: 0
+    lootTableName: default_drop
   mainTarget: {fileID: 1920145480}
   MeleeCooldown: 2
 --- !u!1 &1061685562
@@ -1776,6 +1796,12 @@ MonoBehaviour:
       XP: 0
       Crystals: 0
     rewardModifiers: []
+  tempRewardConfig:
+    baseRewards:
+      Gold: 0
+      XP: 0
+      Crystals: 0
+    RewardMultilpier: []
 --- !u!4 &1673916114
 Transform:
   m_ObjectHideFlags: 0
@@ -2093,6 +2119,16 @@ MonoBehaviour:
   CombatFocus: 2
   MonsterType: -1
   TeamNumber: 1
+  MonsterData:
+    monsterID: 0
+    monsterName: 
+    monsterType: 0
+    monsterUnitSize: 0
+    hasHorn: 0
+    hasStinger: 0
+    hasPincers: 0
+    hasPoison: 0
+    lootTableName: 
   mainTarget: {fileID: 607464776}
   MeleeCooldown: 2
 --- !u!195 &2030095113
@@ -2348,6 +2384,16 @@ MonoBehaviour:
   CombatFocus: 0
   MonsterType: -1
   TeamNumber: 1
+  MonsterData:
+    monsterID: 0
+    monsterName: 
+    monsterType: 0
+    monsterUnitSize: 0
+    hasHorn: 0
+    hasStinger: 0
+    hasPincers: 0
+    hasPoison: 0
+    lootTableName: 
   mainTarget: {fileID: 607464776}
   MeleeCooldown: 2
 --- !u!1660057539 &9223372036854775807

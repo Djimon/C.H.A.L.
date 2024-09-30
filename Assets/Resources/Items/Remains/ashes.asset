@@ -9,9 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 779bf0a27ba7a274d9376831359d6b57, type: 3}
-  m_Name: capsule
+  m_Script: {fileID: 11500000, guid: baf8042f71703384aa685ace75e2e87b, type: 3}
+  m_Name: ashes
   m_EditorClassIdentifier: 
-  itemName: remains:capsule
+  itemName: ashes
   image: {fileID: 0}
   rarity: 0
+  sourceMonsterID: 0
+  SellValue: 0
+  ExchangeCost: 1

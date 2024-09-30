@@ -71,15 +71,16 @@ public class GameManager : MonoBehaviour
         EventManager.OnSpellCast -= UpdateSpellCast;
     }
 
-    private void UpdateUnitKilled(Unit unit, EMonsterType type, EUnitSize size)
+    private void UpdateUnitKilled(Unit unit, MonsterData victim)
     {
-        lootSystem.AddLootFromMobKill(unit.TeamNumber, type);
-        centralBank.GivePlayerCurrency(1, "XP",configurationLoader.CalculateReward(type,size,"XP"));
-        centralBank.GivePlayerCurrency(1, "Gold", configurationLoader.CalculateReward(type, size, "Gold"));
-        centralBank.GivePlayerCurrency(1, "Crystals", configurationLoader.CalculateReward(type, size, "Crystals"));
+        
+        inventoryManager.AddItemsForPlayer(unit.TeamNumber, lootSystem.GetLootFromMobKill(unit.TeamNumber, victim));
+        centralBank.GivePlayerCurrency(1, "XP",configurationLoader.CalculateReward(victim.monsterType,victim.monsterUnitSize,"XP"));
+        centralBank.GivePlayerCurrency(1, "Gold", configurationLoader.CalculateReward(victim.monsterType, victim.monsterUnitSize, "Gold"));
+        centralBank.GivePlayerCurrency(1, "Crystals", configurationLoader.CalculateReward(victim.monsterType, victim.monsterUnitSize, "Crystals"));
         
         gameData.totalEnemiesKilled++;
-        gameData.UpdateMonsterStats(type, 1);
+        gameData.UpdateMonsterStats(victim.monsterType, 1);
 
     }
 

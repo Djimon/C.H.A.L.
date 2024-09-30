@@ -122,6 +122,9 @@ public abstract class Unit : MonoBehaviour
     [SerializeField]
     public int TeamNumber;
 
+    [SerializeField]
+    public MonsterData MonsterData;
+
     private IAttackSet MeleeAttack;
     private IAttackSet RangeAttack;
     private IAttackSet SpecialAttack;
@@ -242,7 +245,7 @@ public abstract class Unit : MonoBehaviour
         if (newtarget != currentTarget)
         {
             currentTarget = newtarget;
-            DebugManager.Log($"{this.name} changed target to {newtarget.name} ({CombatFocus})", 3, "AI");
+            DebugManager.Log($"{this.name} changed target to {newtarget.name} ({CombatFocus})", 4, "AI");
         }
         
 
@@ -274,7 +277,7 @@ public abstract class Unit : MonoBehaviour
             enemy.Distance = Vector3.Distance(transform.position, enemy.Transform.position);
             enemy.currentHealth = enemy.Transform.GetComponent<Unit>().CurrentHealth;
             enemy.currentArmor = enemy.Transform.GetComponent<Unit>().Armor;
-            DebugManager.Log($"{name} knows: {enemy.Transform.gameObject.name} with distance {enemy.Distance} at {enemy.currentHealth} HP",3,"AI");
+            DebugManager.Log($"{name} knows: {enemy.Transform.gameObject.name} with distance {enemy.Distance} at {enemy.currentHealth} HP",4,"AI");
         }
         return new List<Enemy>(enemyList);
     }
@@ -386,7 +389,7 @@ public abstract class Unit : MonoBehaviour
         {
             CurrentHealth = 0f;
             source.GetKill(this);
-            EventManager.TriggerUnitKilled(source, this.MonsterType, this.UnitSize);
+            EventManager.TriggerUnitKilled(source, this.MonsterData);
             Die();
         }
     }
@@ -508,7 +511,7 @@ public abstract class Unit : MonoBehaviour
         for (int i = 0; i < allenemies.Count; i++)
         {
             var enemy = allenemies[i];
-            DebugManager.Log($"{name} targetOption: {enemy.Transform.name}, Distance: {enemy.Distance}",3,"AI");
+            DebugManager.Log($"{name} targetOption: {enemy.Transform.name}, Distance: {enemy.Distance}",4,"AI");
         }
 
         Transform target = allenemies.FirstOrDefault().Transform;

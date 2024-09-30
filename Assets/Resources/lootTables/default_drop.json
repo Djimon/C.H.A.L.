@@ -1,0 +1,17 @@
+{
+    "type": "Monster",
+    "pools": [
+        {
+            "name": "normal",
+            "rolls": 1,
+            "entries": [
+                {
+                    "name": "remains:ashes",
+                    "weight": 1,
+                    "quantity": 1
+                }
+            ],
+            "conditions": []
+        }
+    ]
+}

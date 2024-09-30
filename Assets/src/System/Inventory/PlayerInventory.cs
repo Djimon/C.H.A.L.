@@ -11,7 +11,8 @@ public class PlayerInventory
         // Hier können spezifische Kapazitätswerte pro Itemtyp festgelegt werden, wenn gewünscht
         itemContainers[EItemType.Module] = new ItemContainer<Module>();   // Max. 10 Module
         itemContainers[EItemType.Remains] = new ItemContainer<Remains>();   // Keine Begrenzung
-        itemContainers[EItemType.Rune] = new ItemContainer<Rune>();        // Nur eine Rune
+        //TODO: Get rid of magic Constant
+        itemContainers[EItemType.Rune] = new ItemContainer<Rune>(30); //= 30 max known runes
     }
 
     public void AddItem<T>(EItemType itemType, T item) where T : Item

@@ -117,26 +117,29 @@ public class ConfigurationLoader : MonoBehaviour
                     modifiers = new List<RewardModifiers>()
                 };
 
+                rewardConfig.rewardModifiers.Add(entry);
 
-                foreach(RawRewardSizes rawSize in rawModifiers.monsterSize)
+                foreach (RawRewardSizes rawSize in rawModifiers.monsterSize)
                 {
+                    
                     RewardModifiers modifier = new RewardModifiers
                     {
-                        unitSize = rawSize.size,
-                        XP = rawSize.rewardModifiers.XP,
-                        Gold = rawSize.rewardModifiers.Gold,
-                        Crystals = rawSize.rewardModifiers.Crystals,
+                        unitSize = rawSize.size
                     };
+
+                    float _XP = rawSize.rewardModifiers.XP;
+                    float _Gold = rawSize.rewardModifiers.Gold;
+                    float _Crystals = rawSize.rewardModifiers.Crystals;
+
+                    modifier.XP = _XP /100;
+                    modifier.Gold = _Gold /100;
+                    modifier.Crystals = _Crystals /100;
 
                     entry.modifiers.Add(modifier);
 
                 }
 
-                rewardConfig.rewardModifiers.Add(entry);
-
             }
-
-            
 
 
             Debug.Log("Rewards config loaded successfully!");
@@ -257,7 +260,7 @@ public class ConfigurationLoader : MonoBehaviour
             Lines.Add("DebugLevel = 3");
             Lines.Add("");
             Lines.Add("# Tags to include in debug messages. Specify as a comma-separated list inside square brackets.");
-            Lines.Add($"ExcludedTags = [{string.Join(", ", DebugManager.ActiveTags)}]");
+            Lines.Add($"ActiveTags = [{string.Join(", ", DebugManager.ActiveTags)}]");
             Lines.Add("# just for Info, all Tags that are in the game and are not included");
             Lines.Add($"ExcludedTags = [{string.Join(", ", DebugManager.ExcludedTags)}]");
 

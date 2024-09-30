@@ -10,18 +10,18 @@
             "monsterSize": [
                 {
                     "size": "small",
-                    "rewardmodifiers": {
-                        "Gold": 20.0,
-                        "XP": 10.0,
-                        "Crystals": 2.0
+                    "rewardModifiers": {
+                        "Gold": 20,
+                        "XP": 10,
+                        "Crystals": 2
                     }
                 },
                 {
                     "size": "medium",
-                    "rewardmodifiers": {
-                        "Gold": 20.0,
-                        "XP": 10.0,
-                        "Crystals": 2.0
+                    "rewardModifiers": {
+                        "Gold": 20,
+                        "XP": 10,
+                        "Crystals": 2
                     }
                 }
             ]

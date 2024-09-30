@@ -46,10 +46,16 @@ public class RawRewardModifiers
 public class RawRewardSizes
 {
     public string size;
-    public BaseRewards rewardModifiers ;
+    public RawRewards rewardModifiers;
 }
 
-
+[System.Serializable]
+public class RawRewards
+{
+    public int Gold;
+    public int XP;
+    public int Crystals;
+}
 
 [System.Serializable]
 public class RawRewardConfig

@@ -131,6 +131,7 @@ public class ConfigurationLoader : MonoBehaviour
                     float _Gold = rawSize.rewardModifiers.Gold;
                     float _Crystals = rawSize.rewardModifiers.Crystals;
 
+                    //interpret values as %
                     modifier.XP = _XP /100;
                     modifier.Gold = _Gold /100;
                     modifier.Crystals = _Crystals /100;

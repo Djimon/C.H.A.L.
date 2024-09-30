@@ -46,15 +46,15 @@ public class RawRewardModifiers
 public class RawRewardSizes
 {
     public string size;
-    public RawRewards rewardModifiers;
+    public RawRewards rewardModifiers; // integer, interpreted as %-values
 }
 
 [System.Serializable]
 public class RawRewards
 {
-    public int Gold;
-    public int XP;
-    public int Crystals;
+    public int Gold; // 100% = 1
+    public int XP; // 50% = 0.5
+    public int Crystals; // 200% = 2
 }
 
 [System.Serializable]

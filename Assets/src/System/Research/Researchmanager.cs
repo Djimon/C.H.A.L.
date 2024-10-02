@@ -7,7 +7,15 @@ public class Researchmanager : MonoBehaviour
     public List<Research> activeResearches;
     public List<Research> allResearches;
 
+    public void SelectResearch()
+    { 
+    
+    }
 
+    public void CheckRequiredDNA(Research research)
+    {
+
+    }
     // Start is called before the first frame update
     void Start()
     {

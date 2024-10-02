@@ -23,12 +23,14 @@ public class Research
         DurationInRounds = rounds;
     }
 
+
     public void DoResearch()
     {
         if (researchFound && !researchStarted)
         {
             researchStarted = true;
             remainingRounds = DurationInRounds;
+            
         }
         else if(researchFound && researchStarted)
         {

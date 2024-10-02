@@ -1,46 +1,91 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Progress;
 
+[System.Serializable]
 public class PlayerInventory
 {
-    private Dictionary<EItemType, object> itemContainers = new Dictionary<EItemType, object>();
+    //private Dictionary<EItemType, object> itemContainers = new Dictionary<EItemType, object>();
+    private ItemContainer<Module> modulesContainer;
+    private ItemContainer<Remains> remainsContainer;
+    private ItemContainer<Rune> runesContainer;
 
     public PlayerInventory()
     {
         // Hier können spezifische Kapazitätswerte pro Itemtyp festgelegt werden, wenn gewünscht
-        itemContainers[EItemType.Module] = new ItemContainer<Module>();   // Max. 10 Module
-        itemContainers[EItemType.Remains] = new ItemContainer<Remains>();   // Keine Begrenzung
-        //TODO: Get rid of magic Constant
-        itemContainers[EItemType.Rune] = new ItemContainer<Rune>(30); //= 30 max known runes
+        modulesContainer = new ItemContainer<Module>();   // Max. 10 Module
+        remainsContainer = new ItemContainer<Remains>();   // Keine Begrenzung
+        runesContainer = new ItemContainer<Rune>(30); //= 30 max known runes
     }
+
 
     public void AddItem<T>(EItemType itemType, T item) where T : Item
     {
-        if (itemContainers.ContainsKey(itemType))
+        switch (itemType)
         {
-            var container = itemContainers[itemType] as ItemContainer<T>;
-            container?.AddItem(item);
+            case EItemType.Module: modulesContainer.AddItem(item);
+                    break;
+            case EItemType.Remains: remainsContainer.AddItem(item); 
+                break;
+            case EItemType.Rune: runesContainer.AddItem(item);
+                break;
+            default: DebugManager.Warning($"Container for type {itemType} does not exists.", 2, "Items");
+                break;
         }
+
     }
 
     public void RemoveItem<T>(EItemType itemType, T item) where T : Item
     {
-        if (itemContainers.ContainsKey(itemType))
+        switch (itemType)
         {
-            var container = itemContainers[itemType] as ItemContainer<T>;
-            container?.RemoveItem(item);
+            case EItemType.Module:
+                modulesContainer.RemoveItem(item);
+                break;
+            case EItemType.Remains:
+                remainsContainer.RemoveItem(item);
+                break;
+            case EItemType.Rune:
+                runesContainer.RemoveItem(item);
+                break;
+            default:
+                DebugManager.Warning($"Container for type {itemType} does not exists.", 2, "Items");
+                break;
         }
+
     }
 
     public bool HasItem<T>(EItemType itemType, T item) where T : Item
     {
-        if (itemContainers.ContainsKey(itemType))
+        switch (itemType)
         {
-            var container = itemContainers[itemType] as ItemContainer<T>;
-            return container != null && container.HasItem(item);
+            case EItemType.Module:
+                return modulesContainer != null && modulesContainer.HasItem(item);
+            case EItemType.Remains:
+                return remainsContainer != null && remainsContainer.HasItem(item);
+            case EItemType.Rune:
+                return runesContainer != null && runesContainer.HasItem(item);
+            default:
+                DebugManager.Warning($"Container for type {itemType} does not exists.", 2, "Items");
+                return false;
         }
 
-        return false;
+    }
+
+    public ItemContainer<T> GetContainer<T>(EItemType itemType) where T : Item
+    {
+        switch (itemType)
+        {
+            case EItemType.Module:
+                return modulesContainer as ItemContainer<T>;
+            case EItemType.Remains:
+                return remainsContainer as ItemContainer<T>;
+            case EItemType.Rune:
+                return runesContainer as ItemContainer<T>; ;
+            default:
+                DebugManager.Warning($"Container for type {itemType} does not exists.", 2, "Items");
+                return null;
+        }
     }
 }

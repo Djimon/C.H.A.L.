@@ -1,34 +1,57 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
+[System.Serializable]
 public class ItemContainer<T> where T : Item
 {
-    private List<T> items = new List<T>();
+    private List<ItemSlot> itemSlots;
     private int maxCapacity;
 
     public ItemContainer(int maxCapacity = 0)
     {
+        itemSlots = new List<ItemSlot>();
         this.maxCapacity = maxCapacity;
     }
 
-    public void AddItem(T item)
+    public void AddItem(Item item, int amount = 1)
     {
-        if (maxCapacity == 0 || items.Count < maxCapacity)
+        var existingSlot = itemSlots.Find(slot => slot.Item.Name == item.Name);
+
+        // Wenn das Item bereits existiert, nur die Menge erhöhen
+        if (existingSlot != null)
         {
-            items.Add(item);
+            existingSlot.Amount += amount;
         }
+        // Wenn nicht, und die Kapazität es erlaubt, einen neuen Slot erstellen
         else
         {
-            Debug.Log("Item container is full!");
+            if (maxCapacity == 0 || itemSlots.Count < maxCapacity)
+            {
+                itemSlots.Add(new ItemSlot(item, amount));
+            }
+            else
+            {
+                Debug.Log("Item container is full!");
+            }
         }
     }
 
-    public void RemoveItem(T item)
+    public void RemoveItem(Item item, int amount = 1)
     {
-        if (items.Contains(item))
+        var existingSlot = itemSlots.Find(slot => slot.Item.Name == item.Name);
+
+        if (existingSlot != null)
         {
-            items.Remove(item);
+            if (existingSlot.Amount > amount)
+            {
+                existingSlot.Amount -= amount;
+            }
+            else
+            {
+                itemSlots.Remove(existingSlot);
+            }
         }
         else
         {
@@ -36,18 +59,36 @@ public class ItemContainer<T> where T : Item
         }
     }
 
-    public bool HasItem(T item)
+    public bool HasItem(Item item)
     {
-        return items.Contains(item);
+        return itemSlots.Exists(slot => slot.Item.Name == item.Name);
     }
 
     public int GetItemCount()
     {
-        return items.Count;
+        return itemSlots.Sum(slot => slot.Amount);
     }
 
-    public List<T> GetAllItems()
+    public int GetItemAmount(Item item)
     {
-        return new List<T>(items);
+        var existingSlot = itemSlots.Find(slot => slot.Item.Name == item.Name);
+        return existingSlot != null ? existingSlot.Amount : 0;
+    }
+
+    public List<ItemSlot> GetAllItems()
+    {
+        return itemSlots;
+    }
+}
+
+public class ItemSlot
+{
+    public Item Item;
+    public int Amount;
+
+    public ItemSlot(Item item, int amount)
+    {
+        Item = item;
+        Amount = amount;
     }
 }

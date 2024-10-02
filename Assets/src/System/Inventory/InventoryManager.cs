@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class InventoryManager : MonoBehaviour
 {
+    public InventoryHelper[] pseudoPlayerInventoryDict;
     private Dictionary<int, PlayerInventory> playerInventoryDict = new Dictionary<int, PlayerInventory>();
 
     private void Awake()
@@ -22,6 +23,26 @@ public class InventoryManager : MonoBehaviour
         // Update-Logik kann hier implementiert werden.
     }
 
+    public PlayerInventory GetPlayerinventory(int playerID)
+    {
+        return playerInventoryDict[playerID];
+    }
+
+    private void UpdateInventoryHelper()
+    {
+        pseudoPlayerInventoryDict = new InventoryHelper[playerInventoryDict.Count];
+        int index = 0;
+        foreach(var kvp in playerInventoryDict)
+        {
+            pseudoPlayerInventoryDict[index] = new InventoryHelper 
+            { 
+                playerID = kvp.Key,
+                inventory = kvp.Value
+            };
+            index++;
+        }
+    }
+
     public void CreatePlayerInventory(int playerID)
     {
         if (!playerInventoryDict.ContainsKey(playerID))
@@ -36,6 +57,7 @@ public class InventoryManager : MonoBehaviour
         {
             playerInventoryDict[playerID].AddItem(item.GetItemType(), item);
             DebugManager.Log($"{item.Name} was added to Player {playerID}", 3, "Items");
+            UpdateInventoryHelper();
         }
     }
 
@@ -44,6 +66,7 @@ public class InventoryManager : MonoBehaviour
         if (playerInventoryDict.ContainsKey(playerID))
         {
             playerInventoryDict[playerID].RemoveItem(item.GetItemType(), item);
+            UpdateInventoryHelper();
         }
     }
 
@@ -66,4 +89,11 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
+}
+
+[System.Serializable]
+public struct InventoryHelper
+{
+    public int playerID;
+    public PlayerInventory inventory;
 }

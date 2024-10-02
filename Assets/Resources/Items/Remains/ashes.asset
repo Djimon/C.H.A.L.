@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ashes
   m_EditorClassIdentifier: 
   itemName: ashes
-  image: {fileID: 0}
+  image: {fileID: 21300000, guid: 2868ee3dad9a26a488ff8d7c7bb46f76, type: 3}
   rarity: 0
   sourceMonsterID: 0
   SellValue: 0

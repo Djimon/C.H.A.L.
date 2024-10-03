@@ -16,6 +16,7 @@ public class UI_InventoryManager : MonoBehaviour
     public Button btnModules;
     public Button btnRemains;
     public Button btnRunes;
+    public Button btnExit;
 
     private PlayerInventory playerInventory;
 
@@ -34,9 +35,15 @@ public class UI_InventoryManager : MonoBehaviour
         btnModules.onClick.AddListener(() => ShowItems(EItemType.Module));
         btnRemains.onClick.AddListener(() => ShowItems(EItemType.Remains));
         btnRunes.onClick.AddListener(() => ShowItems(EItemType.Rune));
+        btnExit.onClick.AddListener(() => CloseMenu());
 
         // Standardm‰ﬂig Module anzeigen
         ShowItems(EItemType.Module);
+    }
+
+    private void CloseMenu()
+    {
+        this.gameObject.SetActive(false);
     }
 
     private void ShowItems(EItemType itemType)

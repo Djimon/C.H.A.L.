@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Transactions;
 using TMPro;
-using TMPro.EditorUtilities;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -67,5 +66,7 @@ public class LanguageSelector : MonoBehaviour
 
         // Set the language in the TranslationManager
         LocalisationManager.ChangeLanguage(selectedLanguage);
+
+        OnToggleLanguageMenue();
     }
 }

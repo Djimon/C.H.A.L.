@@ -197,25 +197,37 @@ public class GameManager : MonoBehaviour
                 StartManagingPhase();
                 break;
 
+            case GamePhase.PlacingPhase:
+                StartPlacingePhase();
+                break;
+
             case GamePhase.BattlePhase:
                 StartBattlePhase();
                 break;
+
             case GamePhase.GameOver:
                 SceneManager.LoadScene("GameOver");  // Wechsel zur Charaktererstellungsszene
                 break;
         }
     }
 
+    private void StartPlacingePhase()
+    {
+        DebugManager.Log("Placing Phase gestartet", 2);
+        // Starte UI für das Auswählen und Platzieren von Einheiten und 
+        // Hier kannst du z.B. das UI für diese Phase aktivieren
+    }
+
     private void StartManagingPhase()
     {
-        Debug.Log("Managing Phase gestartet");
-        // Starte UI für das Auswählen von Einheiten, Ressourcenmanagment etc.
+        DebugManager.Log("Managing Phase gestartet",2);
+        // Starte UI für das Forschung, Forge, Brutstätte etc.
         // Hier kannst du z.B. das UI für diese Phase aktivieren
     }
 
     private void StartBattlePhase()
     {
-        Debug.Log("Kampf Phase gestartet");
+        DebugManager.Log("Kampf Phase gestartet",2);
         // Starte den Kampf, spawne Einheiten, aktiviere die Kampf-Logik etc.
     }
 
@@ -229,7 +241,7 @@ public class GameManager : MonoBehaviour
         else
         {
             // Spieler hat verloren -> Game Over oder Neustart
-            Debug.Log("Spieler verloren, Game Over");
+            DebugManager.Log("Spieler verloren, Game Over",2);
             ChangePhase(GamePhase.StartScreen);
         }
     }
@@ -242,6 +254,7 @@ public enum GamePhase
     StartScreen,
     CharacterCreation,
     ManagingPhase,
+    PlacingPhase,
     BattlePhase,
     LootingPhase,
     GameOver

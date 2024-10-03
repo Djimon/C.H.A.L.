@@ -1,0 +1,9 @@
+{
+	"Entries":[
+		{ "key": "ashes", "translation": "Asche" },
+		{ "key": "chitin_armor", "translation": "Chitinpanzer" },
+		{ "key": "eye", "translation": "Auge" },
+		{ "key": "gland", "translation": "Drüse" },
+		{ "key": "glitter_dust", "translation": "Glitzerstaub" }
+	]
+}

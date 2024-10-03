@@ -115,7 +115,7 @@ public class UI_InventoryManager : MonoBehaviour
             if (text.name == "ItemName")
             {
                 // Setze den Item-Namen
-                text.text = itemSlot.Item.Name;
+                text.text = LocalisationManager.GetTranslation(itemSlot.Item.Name);
             }
             else if (text.name == "ItemAmount")
             {

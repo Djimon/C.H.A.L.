@@ -1,0 +1,9 @@
+{
+	"Entries":[
+		{ "key": "ashes", "translation": "Ashes" },
+		{ "key": "chitin_armor", "translation": "Chitin Armor" },
+		{ "key": "eye", "translation": "Eye" },
+		{ "key": "gland", "translation": "Gland" },
+		{ "key": "glitter_dust", "translation": "Glitter Dust" }
+	]
+}

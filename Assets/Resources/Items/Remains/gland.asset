@@ -16,5 +16,6 @@ MonoBehaviour:
   image: {fileID: 21300000, guid: 585cfd705b5035147844505a62c481d6, type: 3}
   rarity: 0
   sourceMonsterID: 0
+  dnaValue: 100
   SellValue: 0
   ExchangeCost: 1

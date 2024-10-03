@@ -43,6 +43,8 @@ public class GameManager : MonoBehaviour
         lootSystem = GetComponent<LootSystem>();
         configurationLoader = GetComponent<ConfigurationLoader>();
         gameData = saveSystem.LoadGameData();
+
+        LocalisationManager.Initiliaize();
     }
 
     public void Start()

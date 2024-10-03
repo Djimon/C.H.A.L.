@@ -9,7 +9,7 @@ public class Researchmanager : MonoBehaviour
 
     public void SelectResearch()
     { 
-    
+
     }
 
     public void CheckRequiredDNA(Research research)

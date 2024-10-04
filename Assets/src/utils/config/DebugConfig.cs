@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class DebugConfig
 {
-    public DebugManager.EDebugLevel DebugLevel = DebugManager.EDebugLevel.Production;
+    public DebugManager.EDebugLevel DebugLevel = DebugManager.EDebugLevel.Debug;
     public bool ProductiveMode = false;
 
     public HashSet<string> ActiveTags = new HashSet<string>();

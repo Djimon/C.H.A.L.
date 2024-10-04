@@ -72,6 +72,9 @@ public abstract class Unit : MonoBehaviour
 {
     private TroopManager troopManager;
 
+    public GameObject unitModel;
+    public Sprite unit3DModelScreenShot;
+
     // New properties for layered update
     [SerializeField]
     public float updateInterval = 1f; // Time in seconds between updates. should not be greater than 1!!
@@ -148,7 +151,11 @@ public abstract class Unit : MonoBehaviour
     {
         troopManager = FindObjectOfType<TroopManager>();
         agent = GetComponent<NavMeshAgent>();
-        agent.speed = WalkingSpeed; 
+        if (agent != null)
+        {
+            agent.speed = WalkingSpeed;
+        }
+        
     }
 
     protected virtual void OnEnable()
@@ -164,8 +171,18 @@ public abstract class Unit : MonoBehaviour
         }
 
         currentTarget = mainTarget; // Start by moving towards the main target
-        agent.SetDestination(currentTarget.position);
-        DebugManager.Log($"Target locked: {currentTarget.position}", 3, "AI");
+
+        if (agent != null)
+        {
+            agent.SetDestination(currentTarget.position);
+            DebugManager.Log($"Target locked: {currentTarget.position}", 3, "AI");
+        }
+        else
+        {
+            DebugManager.Error("NavMeshAgent is null.");
+        }
+
+        
     }
 
     protected virtual void OnDisable()

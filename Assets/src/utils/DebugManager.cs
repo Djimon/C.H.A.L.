@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class DebugManager
+public static class DebugManager
 {
     public enum EDebugLevel
     {
@@ -14,7 +14,7 @@ public class DebugManager
         Debug = 4
     }
     // Globale Einstellungen
-    public static EDebugLevel CurrentDebugLevel = EDebugLevel.Production;
+    public static EDebugLevel CurrentDebugLevel = EDebugLevel.Debug;
     public static bool ProductiveMode = false;
 
     // Aktivierte Tags

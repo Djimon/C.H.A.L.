@@ -24,8 +24,9 @@ public class DebugManager
     private static readonly Dictionary<string, Color> tagColors = new Dictionary<string, Color>
     {
         { "System", Color.yellow },
-        { "PlayerInfo", Color.blue},
-        { "EventSystem", Color.green}
+        { "AI", new Color(50,160,255)},
+        { "Info", Color.green},
+        { "Debug", Color.white}
     };
 
     // Debug Methode
@@ -45,6 +46,48 @@ public class DebugManager
             Debug.Log($"[{coloredTimeAndTag}]: {message}");
         }
         else if(!ActiveTags.Contains(tag)) 
+        {
+            ExcludedTags.Add(tag);
+        }
+    }
+
+    public static void Info(string message, int level = 1, string tag = "Info", Color? customColor = null)
+    {
+        // Umwandlung des int Werts in den entsprechenden EDebugLevel
+        EDebugLevel debugLevel = (EDebugLevel)level;
+        // Wenn ProductiveMode an ist, nur Level-1-Nachrichten ausgeben
+        if (ProductiveMode && debugLevel != EDebugLevel.Production) return;
+
+        // Überprüfen, ob die Nachricht angezeigt werden soll (basierend auf Level und Tag)
+        if (debugLevel <= CurrentDebugLevel && (tag == "" || ActiveTags.Contains(tag)))
+        {
+            Color tagColor = customColor ?? GetTagColor(tag);
+            string timeStamp = GetGameTime();
+            string coloredTimeAndTag = $"<color=#{ColorUtility.ToHtmlStringRGB(tagColor)}>{tag} @ {timeStamp}s</color>";
+            Debug.Log($"[{coloredTimeAndTag}]: {message}");
+        }
+        else if (!ActiveTags.Contains(tag))
+        {
+            ExcludedTags.Add(tag);
+        }
+    }
+
+    public static void Debugging(string message, int level = 4, string tag = "Debug", Color? customColor = null)
+    {
+        // Umwandlung des int Werts in den entsprechenden EDebugLevel
+        EDebugLevel debugLevel = (EDebugLevel)level;
+        // Wenn ProductiveMode an ist, nur Level-1-Nachrichten ausgeben
+        if (ProductiveMode && debugLevel != EDebugLevel.Production) return;
+
+        // Überprüfen, ob die Nachricht angezeigt werden soll (basierend auf Level und Tag)
+        if (debugLevel <= CurrentDebugLevel && (tag == "" || ActiveTags.Contains(tag)))
+        {
+            Color tagColor = customColor ?? GetTagColor(tag);
+            string timeStamp = GetGameTime();
+            string coloredTimeAndTag = $"<color=#{ColorUtility.ToHtmlStringRGB(tagColor)}>{tag} @ {timeStamp}s</color>";
+            Debug.Log($"[{coloredTimeAndTag}]: {message}");
+        }
+        else if (!ActiveTags.Contains(tag))
         {
             ExcludedTags.Add(tag);
         }

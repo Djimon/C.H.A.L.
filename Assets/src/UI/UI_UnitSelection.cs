@@ -7,7 +7,7 @@ using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UnitSelectionManager : MonoBehaviour
+public class UI_UnitSelection : MonoBehaviour
 {
     public GameObject unitSelectionPanel;
     public GameObject unitDetailsPanel;
@@ -18,6 +18,7 @@ public class UnitSelectionManager : MonoBehaviour
     public Button btnEmpower;
     public Button btnSelectUnit;
     public Button btnStart;
+    public Button btnExit;
     public List<Sprite> lockedSlot;
     public List<Button> runeSlots;
 
@@ -59,9 +60,16 @@ public class UnitSelectionManager : MonoBehaviour
         btnStart.onClick.AddListener(StartGame);
         DebugManager.Log($"added logik to the Statbutton {btnStart.name}",2,"Info");
 
+        btnExit.onClick.AddListener(Close);
+
         unitSelectionPanel.SetActive(false);
 
         UnlockSlots();
+    }
+
+    private void Close()
+    {
+        this.gameObject.SetActive(false);
     }
 
     private void OnPlayerSlotClicked(int index)
@@ -157,56 +165,19 @@ public class UnitSelectionManager : MonoBehaviour
             if (unit.UnitSize == EUnitSize.medium && mediumUnitsSelected >= maxMediumUnits)
                 return;
 
-            //TODO: First Open Detail-Panel in the Detailpanel there is an "Submit" button afterwards add selected unit
-            LoadUnitDetails(unit);
-            unitDetailsPanel.SetActive(true);
-            
+            LoadUnitDetails(unit);   
         }
     }
 
     private void LoadUnitDetails(Unit unit)
     {
         loadedUnit = unit;
-        Button[] btns = unitDetailsPanel.GetComponentsInChildren<Button>();
-        Button btnSubmit = null;
-        Button btnEmpower = null;
-        for (int i = 0; i < btns.Length; i++)
-        {
-            if (btns[i].name == "btnSubmit")
-            { 
-                btnSubmit = btns[i];   
-            }
-            if (btns[i].name == "btnEmpower")
-            {
-                btnEmpower = btns[i];
-            }
-        }
-
-        btnEmpower.onClick.AddListener(OpenEmpowerMenu);
-        btnSubmit.onClick.AddListener(AddSelectedUnitToSlot);
-
-        //TODO:
-        //Stats auslesne und anzeigen
-        UpdateUnitStats();
-    
-        //Runen level prüfen und setzen
-
-
+        unitDetailsPanel.GetComponent<UI_UnitDetails>().SetSelectedUnit(unit);
+        unitDetailsPanel.SetActive(true);
     }
 
-    //Move to own script within the Detaisl-Panel
-    public void UpdateUnitStats()
-    {
-        // Texte der item.stats anpassen
-    }
 
-    private void OpenEmpowerMenu()
-    {
-        unitEmpowerPanel.SetActive(true);
-        unitEmpowerPanel.GetComponent<UIEmpowerUnit>().SetUnit(loadedUnit);
-    }
-
-    private void AddSelectedUnitToSlot()
+    public void AddSelectedUnitToSlot()
     {
         selectedUnits.Add(loadedUnit);
         AssignUnitToSlot(loadedUnit);

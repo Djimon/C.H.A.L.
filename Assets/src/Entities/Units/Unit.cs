@@ -92,6 +92,9 @@ public abstract class Unit : MonoBehaviour
     [SerializeField]
     public float AttackRange = 1; //10-20 good base Measure for melee
 
+    [SerializeField]
+    public int AttackSpeed = 1;
+
     [SerializeField] 
     public float Armor = 0;
 
@@ -146,6 +149,7 @@ public abstract class Unit : MonoBehaviour
     public Transform mainTarget; // Assign this in the Inspector
     private Transform currentTarget;
     private Transform newtarget;
+    
 
     protected virtual void Awake()
     {

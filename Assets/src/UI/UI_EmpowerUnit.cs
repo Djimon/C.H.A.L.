@@ -7,7 +7,7 @@ using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIEmpowerUnit : MonoBehaviour
+public class UI_EmpowerUnit : MonoBehaviour
 {
     public GameObject DetailsPanel;
 
@@ -25,6 +25,8 @@ public class UIEmpowerUnit : MonoBehaviour
     private Button btnIncreaseHealth;
     private Button btnIncreaseSpeed;
     private Button btnIncreaseAttackSpeed;
+
+    public Button btnExit;
 
     private InventoryManager inventoryManager;
 
@@ -45,8 +47,15 @@ public class UIEmpowerUnit : MonoBehaviour
         btnIncreaseSpeed.onClick.AddListener(AddSpeed);
         btnIncreaseAttackSpeed.onClick.AddListener(AddAttackSpeed);
 
+        btnExit.onClick.AddListener(Close);
+
         UpdateResourceAmounts();
         InitilizeGrid();
+    }
+
+    private void Close()
+    {
+        gameObject.SetActive(false);
     }
 
     private void InitilizeGrid()
@@ -98,7 +107,7 @@ public class UIEmpowerUnit : MonoBehaviour
 
     private void UpdateDetails()
     {
-        DetailsPanel.GetComponent<UnitSelectionManager>().UpdateUnitStats();
+        DetailsPanel.GetComponent<UI_UnitDetails>().UpdateDetails(UnitToEmpower);
     }
 
     public void SetUnit(Unit unit)

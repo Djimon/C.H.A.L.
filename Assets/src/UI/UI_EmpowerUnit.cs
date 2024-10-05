@@ -16,6 +16,7 @@ public class UI_EmpowerUnit : MonoBehaviour
 
     public GameObject[] Resources;
 
+    //TODO: Prefab erstellen
     public GameObject ressEntryPrefab;
 
     //Add icon for each ressoruce and initilize with 0
@@ -35,11 +36,6 @@ public class UI_EmpowerUnit : MonoBehaviour
 
     private InventoryManager inventoryManager;
 
-    private Dictionary<int, List<ResourceCost>> healthResourceRequirements = new Dictionary<int, List<ResourceCost>>();
-    private Dictionary<int, List<ResourceCost>> powerResourceRequirements = new Dictionary<int, List<ResourceCost>>();
-    private Dictionary<int, List<ResourceCost>> speedResourceRequirements = new Dictionary<int, List<ResourceCost>>();
-    private Dictionary<int, List<ResourceCost>> attackSpeedResourceRequirements = new Dictionary<int, List<ResourceCost>>();
-
     private Dictionary<string, int> playerResourceAmount = new Dictionary<string, int>();
 
     private void Awake()
@@ -50,28 +46,6 @@ public class UI_EmpowerUnit : MonoBehaviour
         btnIncreaseAttackSpeed = AttackSpeedUsedRessourcesPanel.GetComponentInChildren<Button>();
 
         
-    }
-
-    public List<ResourceCost> CalculateResourceCost(int resourcelevel)
-    {
-        List<ResourceCost> requirements = new List<ResourceCost>();
-
-        int ressOnecost = 100 * (int)Mathf.Pow(2, resourcelevel);
-        requirements.Add(new ResourceCost() { resourceName = "ashes", cost = ressOnecost });
-
-        if (resourcelevel >= 3)
-        {
-            int ressTwoCost = 50 * (int)Mathf.Pow(2, resourcelevel - 3);
-            requirements.Add(new ResourceCost() { resourceName = "glitter_dust", cost = ressTwoCost });
-        }
-
-        if (resourcelevel >= 10)
-        {
-            int ressThreeCost = 25 * (int)Mathf.Pow(2, resourcelevel - 10);
-            requirements.Add(new ResourceCost() { resourceName = "blood", cost = ressThreeCost });
-        }
-
-        return requirements;
     }
 
     private void Start()
@@ -119,17 +93,38 @@ public class UI_EmpowerUnit : MonoBehaviour
     private void InitilizeGrid()
     {
         //calculate needed cost cor each grid and display it
-        List<ResourceCost> resourceCosts = CalculateResourceCost(UnitToEmpower.healthLevel);
-        UpdateGrid(PowerUsedRessourcesPanel, resourceCosts);
-        UpdateGrid(HealthUsedRessourcesPanel, resourceCosts);
-        UpdateGrid(SpeedUsedRessourcesPanel, resourceCosts);
-        UpdateGrid(AttackSpeedUsedRessourcesPanel, resourceCosts);
+        UpdateGrid(PowerUsedRessourcesPanel, CalculateResourceCost(UnitToEmpower.powerLevel));
+        UpdateGrid(HealthUsedRessourcesPanel, CalculateResourceCost(UnitToEmpower.healthLevel));
+        UpdateGrid(SpeedUsedRessourcesPanel, CalculateResourceCost(UnitToEmpower.speedLevel));
+        UpdateGrid(AttackSpeedUsedRessourcesPanel, CalculateResourceCost(UnitToEmpower.attackSpeedLevel));
+    }
+
+    public List<ResourceCost> CalculateResourceCost(int resourcelevel)
+    {
+        List<ResourceCost> requirements = new List<ResourceCost>();
+
+        int ressOnecost = 100 * (int)Mathf.Pow(2, resourcelevel);
+        requirements.Add(new ResourceCost() { resourceName = "ashes", cost = ressOnecost });
+
+        if (resourcelevel >= 3)
+        {
+            int ressTwoCost = 50 * (int)Mathf.Pow(2, resourcelevel - 3);
+            requirements.Add(new ResourceCost() { resourceName = "glitter_dust", cost = ressTwoCost });
+        }
+
+        if (resourcelevel >= 10)
+        {
+            int ressThreeCost = 25 * (int)Mathf.Pow(2, resourcelevel - 10);
+            requirements.Add(new ResourceCost() { resourceName = "blood", cost = ressThreeCost });
+        }
+
+        return requirements;
     }
 
     private void AddPower()
     {
         int currentLevel = UnitToEmpower.powerLevel;
-        List<ResourceCost> nextLevelRequirements = powerResourceRequirements[currentLevel];
+        List<ResourceCost> nextLevelRequirements = CalculateResourceCost(UnitToEmpower.powerLevel);
 
         // Überprüfen, ob der Spieler genug Ressourcen hat
         if (PlayerHasEnoughResources(nextLevelRequirements))
@@ -154,7 +149,7 @@ public class UI_EmpowerUnit : MonoBehaviour
     private void AddAttackSpeed()
     {
         int currentLevel = UnitToEmpower.attackSpeedLevel;
-        List<ResourceCost> nextLevelRequirements = attackSpeedResourceRequirements[currentLevel];
+        List<ResourceCost> nextLevelRequirements = CalculateResourceCost(UnitToEmpower.attackSpeedLevel);
 
         // Überprüfen, ob der Spieler genug Ressourcen hat
         if (PlayerHasEnoughResources(nextLevelRequirements))
@@ -179,7 +174,7 @@ public class UI_EmpowerUnit : MonoBehaviour
     private void AddSpeed()
     {
         int currentLevel = UnitToEmpower.speedLevel;
-        List<ResourceCost> nextLevelRequirements = speedResourceRequirements[currentLevel];
+        List<ResourceCost> nextLevelRequirements = CalculateResourceCost(UnitToEmpower.speedLevel);
 
         // Überprüfen, ob der Spieler genug Ressourcen hat
         if (PlayerHasEnoughResources(nextLevelRequirements))
@@ -204,7 +199,7 @@ public class UI_EmpowerUnit : MonoBehaviour
     private void AddHealth()
     {
         int currentLevel = UnitToEmpower.healthLevel;
-        List<ResourceCost> nextLevelRequirements = healthResourceRequirements[currentLevel];
+        List<ResourceCost> nextLevelRequirements = CalculateResourceCost(UnitToEmpower.healthLevel);
 
         // Überprüfen, ob der Spieler genug Ressourcen hat
         if (PlayerHasEnoughResources(nextLevelRequirements))
@@ -214,9 +209,6 @@ public class UI_EmpowerUnit : MonoBehaviour
 
             // Level erhöhen
             UnitToEmpower.IncreaseMaxHealth();
-            UnitToEmpower.IncreaseAttackPower();
-            UnitToEmpower.IncreaseSpeed();
-            UnitToEmpower.IncreaseAttackSpeed();
 
             // UI aktualisieren
             UpdateGrid(HealthUsedRessourcesPanel,CalculateResourceCost(UnitToEmpower.healthLevel));
@@ -268,6 +260,7 @@ public class UI_EmpowerUnit : MonoBehaviour
     public void SetUnit(Unit unit)
     {
         UnitToEmpower = unit;
+        InitilizeGrid();
     }
 
     private void UpdateResourceAmounts()
@@ -315,10 +308,9 @@ public class UI_EmpowerUnit : MonoBehaviour
             GameObject resourceEntry = Instantiate(ressEntryPrefab, panel.transform);
 
             // Setzt das Icon und den Text (Ressourcenname und benötigte Anzahl)
-            resourceEntry.transform.Find("Icon").GetComponent<Image>().sprite = GetResourceIcon(requirement.resourceName);  // Icon wird gesetzt
-            resourceEntry.transform.Find("AmountText").GetComponent<Text>().text = FormatHelper.CleanNumber(requirement.cost);  // Menge wird gesetzt
+            resourceEntry.GetComponent<Image>().sprite = GetResourceIcon(requirement.resourceName);  // Icon wird gesetzt
+            resourceEntry.GetComponentInChildren<TextMeshProUGUI>().text = FormatHelper.CleanNumber(requirement.cost);  // Menge wird gesetzt
         }
-
 
     }
 

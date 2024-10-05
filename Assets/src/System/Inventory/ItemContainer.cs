@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,6 +60,26 @@ public class ItemContainer<T> where T : Item
         }
     }
 
+    internal void RemoveItem(string itemName, int amount = 1)
+    {
+        ItemSlot slot = itemSlots.Find(slot => slot.Item.Name == itemName);
+        if (slot != null)
+        {
+            if (slot.Amount > amount)
+            {
+                slot.Amount -= amount;
+            }
+            else
+            {
+                itemSlots.Remove(slot);
+            }
+        }
+        else
+        {
+            Debug.Log("Item not found in container!");
+        }
+    }
+
     public bool HasItem(Item item)
     {
         return itemSlots.Exists(slot => slot.Item.Name == item.Name);
@@ -90,6 +111,8 @@ public class ItemContainer<T> where T : Item
     {
         return itemSlots;
     }
+
+    
 }
 
 public class ItemSlot

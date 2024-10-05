@@ -70,6 +70,15 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
+    public void RemoveItemForPlayer(int playerID, string itemName)
+    {
+        if (playerInventoryDict.ContainsKey(playerID))
+        {
+            playerInventoryDict[playerID].RemoveItem(itemName);
+            UpdateInventoryHelper();
+        }
+    }
+
     public bool HasItemForPlayer(int playerID, Item item) 
     {
         if (playerInventoryDict.ContainsKey(playerID))

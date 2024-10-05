@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -90,6 +91,13 @@ public class PlayerInventory
         return count;
     }
 
+    internal void RemoveItem(string itemName)
+    {
+        modulesContainer.RemoveItem(itemName);
+        remainsContainer.RemoveItem(itemName);
+        runesContainer.RemoveItem(itemName);
+    }
+
     public ItemContainer<T> GetContainer<T>(EItemType itemType) where T : Item
     {
         switch (itemType)
@@ -105,4 +113,6 @@ public class PlayerInventory
                 return null;
         }
     }
+
+    
 }

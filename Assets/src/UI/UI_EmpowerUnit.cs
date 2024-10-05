@@ -2,8 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Burst.CompilerServices;
 using Unity.VisualScripting;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEditor.Search;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +15,8 @@ public class UI_EmpowerUnit : MonoBehaviour
     public GameObject DetailsPanel;
 
     public GameObject[] Resources;
+
+    public GameObject ressEntryPrefab;
 
     //Add icon for each ressoruce and initilize with 0
     public GameObject HealthUsedRessourcesPanel;
@@ -30,12 +35,43 @@ public class UI_EmpowerUnit : MonoBehaviour
 
     private InventoryManager inventoryManager;
 
+    private Dictionary<int, List<ResourceCost>> healthResourceRequirements = new Dictionary<int, List<ResourceCost>>();
+    private Dictionary<int, List<ResourceCost>> powerResourceRequirements = new Dictionary<int, List<ResourceCost>>();
+    private Dictionary<int, List<ResourceCost>> speedResourceRequirements = new Dictionary<int, List<ResourceCost>>();
+    private Dictionary<int, List<ResourceCost>> attackSpeedResourceRequirements = new Dictionary<int, List<ResourceCost>>();
+
+    private Dictionary<string, int> playerResourceAmount = new Dictionary<string, int>();
+
     private void Awake()
     {
         btnIncreasePower = PowerUsedRessourcesPanel.GetComponentInChildren<Button>();
         btnIncreaseHealth = HealthUsedRessourcesPanel.GetComponentInChildren<Button>();
         btnIncreaseSpeed = SpeedUsedRessourcesPanel.GetComponentInChildren<Button>();
         btnIncreaseAttackSpeed = AttackSpeedUsedRessourcesPanel.GetComponentInChildren<Button>();
+
+        
+    }
+
+    public List<ResourceCost> CalculateResourceCost(int resourcelevel)
+    {
+        List<ResourceCost> requirements = new List<ResourceCost>();
+
+        int ressOnecost = 100 * (int)Mathf.Pow(2, resourcelevel);
+        requirements.Add(new ResourceCost() { resourceName = "ashes", cost = ressOnecost });
+
+        if (resourcelevel >= 3)
+        {
+            int ressTwoCost = 50 * (int)Mathf.Pow(2, resourcelevel - 3);
+            requirements.Add(new ResourceCost() { resourceName = "glitter_dust", cost = ressTwoCost });
+        }
+
+        if (resourcelevel >= 10)
+        {
+            int ressThreeCost = 25 * (int)Mathf.Pow(2, resourcelevel - 10);
+            requirements.Add(new ResourceCost() { resourceName = "blood", cost = ressThreeCost });
+        }
+
+        return requirements;
     }
 
     private void Start()
@@ -50,7 +86,29 @@ public class UI_EmpowerUnit : MonoBehaviour
         btnExit.onClick.AddListener(Close);
 
         UpdateResourceAmounts();
-        InitilizeGrid();
+
+    }
+
+    private void UpdateGridUI(GameObject grid, List<ResourceCost> ressCost)
+    {
+        foreach (Transform child in grid.transform)
+        {
+            Destroy(child.gameObject);        
+        }
+
+        foreach (ResourceCost requirement in ressCost)
+        { 
+            GameObject ressEntry = Instantiate(ressEntryPrefab, grid.transform);
+
+            ressEntry.transform.Find("Icon").GetComponent<Image>().sprite = GetRessIcon(requirement.resourceName);
+            ressEntry.transform.Find("reqAmount").GetComponent<TextMeshProUGUI>().text = FormatHelper.CleanNumber(requirement.cost);
+        }
+        
+    }
+
+    private Sprite GetRessIcon(string resourceName)
+    {
+        return null;
     }
 
     private void Close()
@@ -61,11 +119,20 @@ public class UI_EmpowerUnit : MonoBehaviour
     private void InitilizeGrid()
     {
         //calculate needed cost cor each grid and display it
+        List<ResourceCost> resourceCosts = CalculateResourceCost(UnitToEmpower.healthLevel);
+        UpdateGrid(PowerUsedRessourcesPanel, resourceCosts);
+        UpdateGrid(HealthUsedRessourcesPanel, resourceCosts);
+        UpdateGrid(SpeedUsedRessourcesPanel, resourceCosts);
+        UpdateGrid(AttackSpeedUsedRessourcesPanel, resourceCosts);
+    }
 
-        UpdateGrid(PowerUsedRessourcesPanel);
-        UpdateGrid(HealthUsedRessourcesPanel);
-        UpdateGrid(SpeedUsedRessourcesPanel);
-        UpdateGrid(AttackSpeedUsedRessourcesPanel);
+    private void AddPower()
+    {
+        //Updat stat and subtract the items
+
+        //show next Costs
+        UpdateGrid(PowerUsedRessourcesPanel, CalculateResourceCost(UnitToEmpower.healthLevel));
+        UpdateDetails();
     }
 
     private void AddAttackSpeed()
@@ -73,7 +140,7 @@ public class UI_EmpowerUnit : MonoBehaviour
         //Updat stat and subtract the items
 
         //show next Costs
-        UpdateGrid(AttackSpeedUsedRessourcesPanel);
+        UpdateGrid(AttackSpeedUsedRessourcesPanel, CalculateResourceCost(UnitToEmpower.healthLevel));
         UpdateDetails();
     }
 
@@ -82,28 +149,65 @@ public class UI_EmpowerUnit : MonoBehaviour
         //Updat stat and subtract the items
 
         //show next Costs
-        UpdateGrid(SpeedUsedRessourcesPanel);
+        UpdateGrid(SpeedUsedRessourcesPanel, CalculateResourceCost(UnitToEmpower.healthLevel));
         UpdateDetails();
     }
 
     private void AddHealth()
     {
-        //Updat stat and subtract the items
-        
-        //show next Costs
-        UpdateGrid(HealthUsedRessourcesPanel);
-        //update the Details
-        UpdateDetails();
+        int currentLevel = UnitToEmpower.healthLevel;
+        List<ResourceCost> nextLevelRequirements = healthResourceRequirements[currentLevel];
+
+        // Überprüfen, ob der Spieler genug Ressourcen hat
+        if (PlayerHasEnoughResources(nextLevelRequirements))
+        {
+            // Ressourcen abziehen
+            SubtractResources(nextLevelRequirements);
+
+            // Level erhöhen
+            UnitToEmpower.IncreaseMaxHealth();
+
+            // UI aktualisieren
+            UpdateGrid(HealthUsedRessourcesPanel,CalculateResourceCost(UnitToEmpower.healthLevel));
+            //update the Details
+            UpdateDetails();
+        }
+        else
+        {
+            Debug.Log("Nicht genügend Ressourcen");
+        }
+  
     }
 
-    private void AddPower()
+    private bool SubtractResources(List<ResourceCost> nextLevelRequirements)
     {
-        //Updat stat and subtract the items
-
-        //show next Costs
-        UpdateGrid(PowerUsedRessourcesPanel);
-        UpdateDetails();
+        foreach (ResourceCost cost in nextLevelRequirements)
+        {
+            if (inventoryManager.GetItemAmountForPlayer(1, cost.resourceName) < cost.cost)
+            {
+                return false;
+            }
+            else 
+            {
+                inventoryManager.RemoveItemForPlayer(1, cost.resourceName);
+            }
+        }
+        return true;
     }
+
+    private bool PlayerHasEnoughResources(List<ResourceCost> nextLevelRequirements)
+    {
+        foreach (ResourceCost cost in nextLevelRequirements)
+        { 
+            if(inventoryManager.GetItemAmountForPlayer(1,cost.resourceName) < cost.cost)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 
     private void UpdateDetails()
     {
@@ -123,14 +227,16 @@ public class UI_EmpowerUnit : MonoBehaviour
             if (text.name == "Amount")
             {
                 DebugManager.Log("corect Text found");
-                string itemName = GetItemvyIndex(i);
-                text.text = FormatHelper.CleanNumber(inventoryManager.GetItemAmountForPlayer(i, itemName));
+                string itemName = GetItemByIndex(i);
+                int amount = inventoryManager.GetItemAmountForPlayer(i, itemName);
+                playerResourceAmount[itemName] =amount;
+                text.text = FormatHelper.CleanNumber(amount);
             }
             
         }
     }
 
-    private string GetItemvyIndex(int index)
+    private string GetItemByIndex(int index)
     {
         return index switch
         {
@@ -142,15 +248,42 @@ public class UI_EmpowerUnit : MonoBehaviour
 
     }
 
-    private void UpdateGrid(GameObject panel)
+    private void UpdateGrid(GameObject panel, List<ResourceCost> resCost)
     {
-        //show how many ressources are used for next level
+        foreach (Transform child in panel.transform)
+        {
+            //
+            Destroy(child.gameObject);
+        }
+
+        // Fügt neue Ressourcen-UI - Elemente hinzu
+        foreach (var requirement in resCost)
+        {
+            // Hier erstellst du ein neues UI-Element für jede Ressource
+            // Angenommen, du hast eine Vorlage für Ressourceneinträge (z.B. ein Prefab)
+            GameObject resourceEntry = Instantiate(ressEntryPrefab, panel.transform);
+
+            // Setzt das Icon und den Text (Ressourcenname und benötigte Anzahl)
+            resourceEntry.transform.Find("Icon").GetComponent<Image>().sprite = GetResourceIcon(requirement.resourceName);  // Icon wird gesetzt
+            resourceEntry.transform.Find("AmountText").GetComponent<Text>().text = FormatHelper.CleanNumber(requirement.cost);  // Menge wird gesetzt
+        }
 
 
     }
 
+    private Sprite GetResourceIcon(string resourceName)
+    {
+        //TODO
+        return null;
+    }
+}
 
-
-
+public class ResourceCost
+{
+    public string resourceName;
+    public int cost;
 
 }
+
+
+

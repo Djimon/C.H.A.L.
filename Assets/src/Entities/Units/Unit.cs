@@ -149,7 +149,7 @@ public abstract class Unit : MonoBehaviour
     public Transform mainTarget; // Assign this in the Inspector
     private Transform currentTarget;
     private Transform newtarget;
-    
+    internal int healthLevel;
 
     protected virtual void Awake()
     {
@@ -599,4 +599,9 @@ public abstract class Unit : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, AttackRange);
     }
 
+    internal void IncreaseMaxHealth(int level = 1)
+    {
+        MaxHealth = (int) (1+(level/10))* MaxHealth;
+        DebugManager.Info($"Increased health of {MonsterData.monsterName} to {MaxHealth}.");
+    }
 }

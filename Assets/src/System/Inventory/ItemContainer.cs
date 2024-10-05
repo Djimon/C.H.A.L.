@@ -64,6 +64,11 @@ public class ItemContainer<T> where T : Item
         return itemSlots.Exists(slot => slot.Item.Name == item.Name);
     }
 
+    public bool HasItem(string itemName)
+    {
+        return itemSlots.Exists(slot => slot.Item.Name == itemName);
+    }
+
     public int GetItemCount()
     {
         return itemSlots.Sum(slot => slot.Amount);
@@ -72,6 +77,12 @@ public class ItemContainer<T> where T : Item
     public int GetItemAmount(Item item)
     {
         var existingSlot = itemSlots.Find(slot => slot.Item.Name == item.Name);
+        return existingSlot != null ? existingSlot.Amount : 0;
+    }
+
+    public int GetItemAmount(string itemName)
+    {
+        var existingSlot = itemSlots.Find(slot => slot.Item.Name == itemName);
         return existingSlot != null ? existingSlot.Amount : 0;
     }
 

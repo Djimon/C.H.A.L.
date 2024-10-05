@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,9 +11,11 @@ public class UnitSelectionManager : MonoBehaviour
 {
     public GameObject unitSelectionPanel;
     public GameObject unitDetailsPanel;
+    public GameObject unitEmpowerPanel;
     public List<Unit> availableUnits;
     public Transform availableUnitsGrid;
     public List<Button> playerSlots;
+    public Button btnEmpower;
     public Button btnSelectUnit;
     public Button btnStart;
     public List<Sprite> lockedSlot;
@@ -39,6 +42,7 @@ public class UnitSelectionManager : MonoBehaviour
     private List<int> unlockLevels = new List<int> {0,3,6,9,15};
     private int currentSlotLayoutLevel = 0;
     private int currentSlotIndex;
+    private Unit loadedUnit;
 
 
     // Start is called before the first frame update
@@ -63,7 +67,27 @@ public class UnitSelectionManager : MonoBehaviour
     private void OnPlayerSlotClicked(int index)
     {
         currentSlotIndex = index; // Speichert den Index des angeklickten Slots
+        PurgeOldGrid();
+        PopulateAvailableUnitsGrid();
         unitSelectionPanel.SetActive(true); // Zeigt das Auswahlpanel an
+    }
+
+    private void PurgeOldGrid()
+    { 
+        Button[] unitbuttons = availableUnitsGrid.GetComponentsInChildren<Button>();
+        if (unitbuttons == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < unitbuttons.Length; i++)
+        { 
+            if(unitbuttons[i].name == "UnitButton")
+            {
+                GameObject.Destroy(unitbuttons[i].gameObject);
+            }
+        }
+        
     }
 
     private void PopulateAvailableUnitsGrid()
@@ -136,31 +160,69 @@ public class UnitSelectionManager : MonoBehaviour
             //TODO: First Open Detail-Panel in the Detailpanel there is an "Submit" button afterwards add selected unit
             LoadUnitDetails(unit);
             unitDetailsPanel.SetActive(true);
-            AddSelectedUnitToSlot(unit);
+            
         }
     }
 
     private void LoadUnitDetails(Unit unit)
     {
+        loadedUnit = unit;
+        Button[] btns = unitDetailsPanel.GetComponentsInChildren<Button>();
+        Button btnSubmit = null;
+        Button btnEmpower = null;
+        for (int i = 0; i < btns.Length; i++)
+        {
+            if (btns[i].name == "btnSubmit")
+            { 
+                btnSubmit = btns[i];   
+            }
+            if (btns[i].name == "btnEmpower")
+            {
+                btnEmpower = btns[i];
+            }
+        }
+
+        btnEmpower.onClick.AddListener(OpenEmpowerMenu);
+        btnSubmit.onClick.AddListener(AddSelectedUnitToSlot);
+
         //TODO:
         //Stats auslesne und anzeigen
+        UpdateUnitStats();
+    
         //Runen level pr¸fen und setzen
-        
+
+
     }
 
-    private void AddSelectedUnitToSlot(Unit unit)
+    //Move to own script within the Detaisl-Panel
+    public void UpdateUnitStats()
     {
-        selectedUnits.Add(unit);
-        AssignUnitToSlot(unit);
+        // Texte der item.stats anpassen
+    }
 
-        if (unit.UnitSize == EUnitSize.large)
+    private void OpenEmpowerMenu()
+    {
+        unitEmpowerPanel.SetActive(true);
+        unitEmpowerPanel.GetComponent<UIEmpowerUnit>().SetUnit(loadedUnit);
+    }
+
+    private void AddSelectedUnitToSlot()
+    {
+        selectedUnits.Add(loadedUnit);
+        AssignUnitToSlot(loadedUnit);
+
+        if (loadedUnit.UnitSize == EUnitSize.large)
             largeUnitsSelected++;
-        else if (unit.UnitSize == EUnitSize.medium)
+        else if (loadedUnit.UnitSize == EUnitSize.medium)
             mediumUnitsSelected++;
         else
             smallUnitsSelected++;
 
-        // Schlieﬂe das Auswahlfenster
+        availableUnits.Remove(loadedUnit);
+
+        // Schlieﬂe das Auswahlfenster 
+        unitDetailsPanel.SetActive(false);
+        unitEmpowerPanel.SetActive(false);
         unitSelectionPanel.SetActive(false);
     }
 

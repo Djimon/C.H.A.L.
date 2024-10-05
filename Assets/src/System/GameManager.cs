@@ -64,6 +64,7 @@ public class GameManager : MonoBehaviour
 
     public void Update()
     {
+        //TODO: Refactor: should not be called each update! really NOT!!
         if (GameManager.instance.currentPhase == GamePhase.ManagingPhase)
         {
             ToggleManagingObjects(true);

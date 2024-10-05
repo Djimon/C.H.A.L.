@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 
-
+[RequireComponent(typeof(ItemRegistry))]
 public class LootSystem : MonoBehaviour
 {
     public ItemRegistry itemRegistry;

@@ -80,6 +80,16 @@ public class InventoryManager : MonoBehaviour
         return false;
     }
 
+    public int GetItemAmountForPlayer(int playerID, string itemName)
+    {
+        if (playerInventoryDict.ContainsKey(playerID))
+        {
+            playerInventoryDict[playerID].GetItemCount(itemName);
+        }
+
+        return 0;
+    }
+
     internal void AddItemsForPlayer(int teamNumber, List<Item> items)
     {
         

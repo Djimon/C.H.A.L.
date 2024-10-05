@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: baf8042f71703384aa685ace75e2e87b, type: 3}
-  m_Name: glitter_dust
+  m_Name: blood
   m_EditorClassIdentifier: 
-  itemName: glitter_dust
-  image: {fileID: 21300000, guid: a6004eb98ae4a5c49ae3a9d560c1bedd, type: 3}
-  rarity: 1
+  itemName: blood
+  image: {fileID: 21300000, guid: a28c1a21b9f1b5d47ad6c066ecde16ca, type: 3}
+  rarity: 2
   sourceMonsterID: 0
   dnaValue: 0
   SellValue: 0
-  ExchangeCost: 100
+  ExchangeCost: 10000

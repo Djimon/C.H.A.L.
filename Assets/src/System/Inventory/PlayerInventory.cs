@@ -73,6 +73,23 @@ public class PlayerInventory
 
     }
 
+    public int GetItemCount(string itemName)
+    {
+        int count = modulesContainer.GetItemAmount(itemName);
+
+        if (count == 0)
+        {
+            count = remainsContainer.GetItemAmount(itemName);
+        }
+
+        if (count == 0)
+        {
+            count = runesContainer.GetItemAmount(itemName);
+        }
+
+        return count;
+    }
+
     public ItemContainer<T> GetContainer<T>(EItemType itemType) where T : Item
     {
         switch (itemType)

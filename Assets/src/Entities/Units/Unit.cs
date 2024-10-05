@@ -149,7 +149,11 @@ public abstract class Unit : MonoBehaviour
     public Transform mainTarget; // Assign this in the Inspector
     private Transform currentTarget;
     private Transform newtarget;
+
     internal int healthLevel;
+    internal int powerLevel;
+    internal int speedLevel;
+    internal int attackSpeedLevel;
 
     protected virtual void Awake()
     {
@@ -601,7 +605,29 @@ public abstract class Unit : MonoBehaviour
 
     internal void IncreaseMaxHealth(int level = 1)
     {
+        healthLevel += level;
         MaxHealth = (int) (1+(level/10))* MaxHealth;
         DebugManager.Info($"Increased health of {MonsterData.monsterName} to {MaxHealth}.");
+    }
+
+    internal void IncreaseAttackPower(int level = 1)
+    {
+        powerLevel += level;
+        AttackPower = (int)(1 + (level / 5f)) * AttackPower; // Example scaling
+        DebugManager.Info($"Increased attack power of {MonsterData.monsterName} to {AttackPower}.");
+    }
+
+    internal void IncreaseSpeed(int level = 1)
+    {
+        speedLevel += level;
+        WalkingSpeed = (int)(1 + (level / 8f)) * WalkingSpeed; // Example scaling
+        DebugManager.Info($"Increased speed of {MonsterData.monsterName} to {WalkingSpeed}.");
+    }
+
+    internal void IncreaseAttackSpeed(int level = 1)
+    {
+        attackSpeedLevel += level;
+        AttackSpeed = (int)(1 + (level / 6f)) * AttackSpeed; // Example scaling
+        DebugManager.Info($"Increased attack speed of {MonsterData.monsterName} to {AttackSpeed}.");
     }
 }

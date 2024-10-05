@@ -128,29 +128,77 @@ public class UI_EmpowerUnit : MonoBehaviour
 
     private void AddPower()
     {
-        //Updat stat and subtract the items
+        int currentLevel = UnitToEmpower.powerLevel;
+        List<ResourceCost> nextLevelRequirements = powerResourceRequirements[currentLevel];
 
-        //show next Costs
-        UpdateGrid(PowerUsedRessourcesPanel, CalculateResourceCost(UnitToEmpower.healthLevel));
-        UpdateDetails();
+        // Überprüfen, ob der Spieler genug Ressourcen hat
+        if (PlayerHasEnoughResources(nextLevelRequirements))
+        {
+            // Ressourcen abziehen
+            SubtractResources(nextLevelRequirements);
+
+            // Level erhöhen
+            UnitToEmpower.IncreaseAttackPower();
+
+            // UI aktualisieren
+            UpdateGrid(PowerUsedRessourcesPanel, CalculateResourceCost(UnitToEmpower.powerLevel));
+            //update the Details
+            UpdateDetails();
+        }
+        else
+        {
+            Debug.Log("Nicht genügend Ressourcen");
+        }
     }
 
     private void AddAttackSpeed()
     {
-        //Updat stat and subtract the items
+        int currentLevel = UnitToEmpower.attackSpeedLevel;
+        List<ResourceCost> nextLevelRequirements = attackSpeedResourceRequirements[currentLevel];
 
-        //show next Costs
-        UpdateGrid(AttackSpeedUsedRessourcesPanel, CalculateResourceCost(UnitToEmpower.healthLevel));
-        UpdateDetails();
+        // Überprüfen, ob der Spieler genug Ressourcen hat
+        if (PlayerHasEnoughResources(nextLevelRequirements))
+        {
+            // Ressourcen abziehen
+            SubtractResources(nextLevelRequirements);
+
+            // Level erhöhen
+            UnitToEmpower.IncreaseAttackSpeed();
+
+            // UI aktualisieren
+            UpdateGrid(AttackSpeedUsedRessourcesPanel, CalculateResourceCost(UnitToEmpower.attackSpeedLevel));
+            //update the Details
+            UpdateDetails();
+        }
+        else
+        {
+            Debug.Log("Nicht genügend Ressourcen");
+        }
     }
 
     private void AddSpeed()
     {
-        //Updat stat and subtract the items
+        int currentLevel = UnitToEmpower.speedLevel;
+        List<ResourceCost> nextLevelRequirements = speedResourceRequirements[currentLevel];
 
-        //show next Costs
-        UpdateGrid(SpeedUsedRessourcesPanel, CalculateResourceCost(UnitToEmpower.healthLevel));
-        UpdateDetails();
+        // Überprüfen, ob der Spieler genug Ressourcen hat
+        if (PlayerHasEnoughResources(nextLevelRequirements))
+        {
+            // Ressourcen abziehen
+            SubtractResources(nextLevelRequirements);
+
+            // Level erhöhen;
+            UnitToEmpower.IncreaseSpeed();
+
+            // UI aktualisieren
+            UpdateGrid(SpeedUsedRessourcesPanel, CalculateResourceCost(UnitToEmpower.speedLevel));
+            //update the Details
+            UpdateDetails();
+        }
+        else
+        {
+            Debug.Log("Nicht genügend Ressourcen");
+        }
     }
 
     private void AddHealth()
@@ -166,6 +214,9 @@ public class UI_EmpowerUnit : MonoBehaviour
 
             // Level erhöhen
             UnitToEmpower.IncreaseMaxHealth();
+            UnitToEmpower.IncreaseAttackPower();
+            UnitToEmpower.IncreaseSpeed();
+            UnitToEmpower.IncreaseAttackSpeed();
 
             // UI aktualisieren
             UpdateGrid(HealthUsedRessourcesPanel,CalculateResourceCost(UnitToEmpower.healthLevel));

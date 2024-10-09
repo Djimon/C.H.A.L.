@@ -48,6 +48,7 @@ public class InventoryManager : MonoBehaviour
         if (!playerInventoryDict.ContainsKey(playerID))
         {
             playerInventoryDict[playerID] = new PlayerInventory();
+            UpdateInventoryHelper();
         }
     }
 

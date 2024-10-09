@@ -8,12 +8,12 @@ using static UnityEditor.Progress;
 [System.Serializable]
 public class PlayerInventory
 {
-    private ItemContainer<Item> itemContainer;
+    private ItemContainer itemContainer;
 
 
     public PlayerInventory()
     {
-        itemContainer = new ItemContainer<Item>();
+        itemContainer = new ItemContainer();
     }
 
     // Methode zum Hinzufügen eines Items

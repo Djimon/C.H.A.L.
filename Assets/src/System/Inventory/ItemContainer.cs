@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 
 [System.Serializable]
-public class ItemContainer<T> where T : Item
+public class ItemContainer
 {
     private List<ItemSlot> itemSlots;
     private int maxCapacity;
@@ -115,6 +115,7 @@ public class ItemContainer<T> where T : Item
     
 }
 
+[System.Serializable]
 public class ItemSlot
 {
     public Item Item;

@@ -83,7 +83,7 @@ public class GameManager : MonoBehaviour
         if (!DebugManager.ProductiveMode)
         {
             startreward = 10000;
-            DebugManager.Error($"READ CARFULLY: for test reasons there a {startreward} added to each. XP, Golf and Crystals!");
+            DebugManager.Error($"READ CARFULLY: for test reasons there a {startreward} added to each. XP, Gold and Crystals!");
         }
 
         centralBank.CreatePlayerCurrencies(1);
@@ -127,6 +127,7 @@ public class GameManager : MonoBehaviour
         inventoryManager.AddItemForPlayer(1, itemRegistry.GetItemByName("glitter_dust").CreateInstance(), 10000);
         inventoryManager.AddItemForPlayer(1, itemRegistry.GetItemByName("ashes").CreateInstance(), 10000);
         inventoryManager.AddItemForPlayer(1, itemRegistry.GetItemByName("blood").CreateInstance(), 10000);
+        DebugManager.Error($"READ CARFULLY: for test reasons there was added a lot fo items to the payer (1) inventroy");
     }
 
     private void UpdateUnitKilled(Unit unit, MonsterData victim)

@@ -132,9 +132,9 @@ public class ConfigurationLoader : MonoBehaviour
                     float _Crystals = rawSize.rewardModifiers.Crystals;
 
                     //interpret values as %
-                    modifier.XP = rewardConfig.baseRewards.XP * (1+(_XP /100));
-                    modifier.Gold = rewardConfig.baseRewards.Gold * (1+(_Gold /100));
-                    modifier.Crystals = rewardConfig.baseRewards.Crystals * (1 + (_Crystals / 100));
+                    modifier.XP =  (1+(_XP /100));
+                    modifier.Gold =  (1+(_Gold /100));
+                    modifier.Crystals =  (1 + (_Crystals / 100));
 
                     entry.modifiers.Add(modifier);
 
@@ -176,8 +176,12 @@ public class ConfigurationLoader : MonoBehaviour
         {
             // Wende den entsprechenden Modifikator an, falls er vorhanden ist
             float multiplier = GetMultiplier(modifier, rewardType);
-            return (int)MathF.Round(baseReward * multiplier, 0);
+            int reward = (int)MathF.Round(baseReward * multiplier, 0);
+            DebugManager.Log($"reward {rewardType} for {monsterSize.ToString()} {monsterType.ToString()} is {reward}.", 2, "System");
+            return reward;
         }
+
+        DebugManager.Log($"reward {rewardType} for {monsterSize.ToString()} {monsterType.ToString()} is {baseReward}.", 2, "System");
 
         return (int)baseReward;
     }

@@ -1,7 +1,7 @@
 {
     "baseRewards": {
         "Gold": 100,
-        "XP": 50,
+        "XP": 10,
         "Crystals": 0
     },
     "RewardMultilpier": [
@@ -11,33 +11,33 @@
                 {
                     "size": "small",
                     "rewardModifiers": {
-                        "Gold": 20,
-                        "XP": 10,
-                        "Crystals": 2
+                        "Gold": 0,
+                        "XP": 0,
+                        "Crystals": 0
                     }
                 },
                 {
                     "size": "medium",
                     "rewardModifiers": {
                         "Gold": 30,
-                        "XP": 15,
-                        "Crystals": 2
+                        "XP": 30,
+                        "Crystals": 0
                     }
                 },
 				{
                     "size": "large",
                     "rewardModifiers": {
-                        "Gold": 50,
-                        "XP": 25,
-                        "Crystals": 2
+                        "Gold": 100,
+                        "XP": 100,
+                        "Crystals": 0
                     }
                 },
 				{
                     "size": "huge",
                     "rewardModifiers": {
-                        "Gold": 100,
-                        "XP": 50,
-                        "Crystals": 2
+                        "Gold": 200,
+                        "XP": 500,
+                        "Crystals": 1
                     }
                 }
             ]
@@ -50,30 +50,30 @@
                     "rewardModifiers": {
                         "Gold": 100,
                         "XP": 100,
-                        "Crystals": 2
+                        "Crystals": 0
                     }
                 },
                 {
                     "size": "medium",
                     "rewardModifiers": {
                         "Gold": 200,
-                        "XP": 150,
-                        "Crystals": 2
+                        "XP": 200,
+                        "Crystals": 0
                     }
                 },
 				{
                     "size": "large",
                     "rewardModifiers": {
                         "Gold": 500,
-                        "XP": 250,
-                        "Crystals": 2
+                        "XP": 500,
+                        "Crystals": 0
                     }
                 },
 				{
                     "size": "huge",
                     "rewardModifiers": {
-                        "Gold": 1000,
-                        "XP": 500,
+                        "Gold": 1500,
+                        "XP": 5000,
                         "Crystals": 2
                     }
                 }
@@ -86,31 +86,31 @@
                     "size": "small",
                     "rewardModifiers": {
                         "Gold": 500,
-                        "XP": 250,
-                        "Crystals": 2
+                        "XP": 500,
+                        "Crystals": 0
                     }
                 },
                 {
                     "size": "medium",
                     "rewardModifiers": {
                         "Gold": 1000,
-                        "XP": 500,
-                        "Crystals": 2
+                        "XP": 1000,
+                        "Crystals": 0
                     }
                 },
 				{
                     "size": "large",
                     "rewardModifiers": {
                         "Gold": 2000,
-                        "XP": 1000,
-                        "Crystals": 2
+                        "XP": 2000,
+                        "Crystals": 0
                     }
                 },
 				{
                     "size": "huge",
                     "rewardModifiers": {
-                        "Gold": 500,
-                        "XP": 2500,
+                        "Gold": 5000,
+                        "XP": 100000,
                         "Crystals": 2
                     }
                 }

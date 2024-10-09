@@ -2,12 +2,12 @@
     "baseRewards": {
         "Gold": 100,
         "XP": 50,
-        "Crystals": 10
+        "Crystals": 0
     },
     "RewardMultilpier": [
         {
             "monsterType": "Chitinoid",
-            "monsterSize": [
+            "monsterSizes": [
                 {
                     "size": "small",
                     "rewardModifiers": {
@@ -19,8 +19,98 @@
                 {
                     "size": "medium",
                     "rewardModifiers": {
-                        "Gold": 20,
-                        "XP": 10,
+                        "Gold": 30,
+                        "XP": 15,
+                        "Crystals": 2
+                    }
+                },
+				{
+                    "size": "large",
+                    "rewardModifiers": {
+                        "Gold": 50,
+                        "XP": 25,
+                        "Crystals": 2
+                    }
+                },
+				{
+                    "size": "huge",
+                    "rewardModifiers": {
+                        "Gold": 100,
+                        "XP": 50,
+                        "Crystals": 2
+                    }
+                }
+            ]
+        },
+		{
+            "monsterType": "Reptiloid",
+            "monsterSizes": [
+                {
+                    "size": "small",
+                    "rewardModifiers": {
+                        "Gold": 100,
+                        "XP": 100,
+                        "Crystals": 2
+                    }
+                },
+                {
+                    "size": "medium",
+                    "rewardModifiers": {
+                        "Gold": 200,
+                        "XP": 150,
+                        "Crystals": 2
+                    }
+                },
+				{
+                    "size": "large",
+                    "rewardModifiers": {
+                        "Gold": 500,
+                        "XP": 250,
+                        "Crystals": 2
+                    }
+                },
+				{
+                    "size": "huge",
+                    "rewardModifiers": {
+                        "Gold": 1000,
+                        "XP": 500,
+                        "Crystals": 2
+                    }
+                }
+            ]
+        },
+		{
+            "monsterType": "Beastoid",
+            "monsterSizes": [
+                {
+                    "size": "small",
+                    "rewardModifiers": {
+                        "Gold": 500,
+                        "XP": 250,
+                        "Crystals": 2
+                    }
+                },
+                {
+                    "size": "medium",
+                    "rewardModifiers": {
+                        "Gold": 1000,
+                        "XP": 500,
+                        "Crystals": 2
+                    }
+                },
+				{
+                    "size": "large",
+                    "rewardModifiers": {
+                        "Gold": 2000,
+                        "XP": 1000,
+                        "Crystals": 2
+                    }
+                },
+				{
+                    "size": "huge",
+                    "rewardModifiers": {
+                        "Gold": 500,
+                        "XP": 2500,
                         "Crystals": 2
                     }
                 }

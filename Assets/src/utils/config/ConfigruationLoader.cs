@@ -119,7 +119,7 @@ public class ConfigurationLoader : MonoBehaviour
 
                 rewardConfig.rewardModifiers.Add(entry);
 
-                foreach (RawRewardSizes rawSize in rawModifiers.monsterSize)
+                foreach (RawRewardSizes rawSize in rawModifiers.monsterSizes)
                 {
                     
                     RewardModifiers modifier = new RewardModifiers
@@ -132,9 +132,9 @@ public class ConfigurationLoader : MonoBehaviour
                     float _Crystals = rawSize.rewardModifiers.Crystals;
 
                     //interpret values as %
-                    modifier.XP = _XP /100;
-                    modifier.Gold = _Gold /100;
-                    modifier.Crystals = _Crystals /100;
+                    modifier.XP = rewardConfig.baseRewards.XP * (1+(_XP /100));
+                    modifier.Gold = rewardConfig.baseRewards.Gold * (1+(_Gold /100));
+                    modifier.Crystals = rewardConfig.baseRewards.Crystals * (1 + (_Crystals / 100));
 
                     entry.modifiers.Add(modifier);
 

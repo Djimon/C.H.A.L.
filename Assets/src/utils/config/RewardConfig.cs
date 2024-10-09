@@ -39,7 +39,7 @@ public class RewardModifiers
 public class RawRewardModifiers
 {
     public string monsterType;
-    public List<RawRewardSizes> monsterSize;
+    public List<RawRewardSizes> monsterSizes;
 }
 
 [System.Serializable]

@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
     public GamePhase currentPhase;
-
+    public bool giveStartBoost = false;
     public List<GameObject> managingObjects;
     
 
@@ -80,7 +80,7 @@ public class GameManager : MonoBehaviour
     {
         int startreward = 0;
         //TODO: For each registered player
-        if (!DebugManager.ProductiveMode)
+        if (!DebugManager.ProductiveMode && giveStartBoost)
         {
             startreward = 10000;
             DebugManager.Error($"READ CARFULLY: for test reasons there a {startreward} added to each. XP, Gold and Crystals!");
@@ -124,6 +124,10 @@ public class GameManager : MonoBehaviour
 
     private void CreateTestingStartinventory()
     {
+        if(!giveStartBoost)
+        {
+            return;
+        }
         inventoryManager.AddItemForPlayer(1, itemRegistry.GetItemByName("glitter_dust").CreateInstance(), 10000);
         inventoryManager.AddItemForPlayer(1, itemRegistry.GetItemByName("ashes").CreateInstance(), 10000);
         inventoryManager.AddItemForPlayer(1, itemRegistry.GetItemByName("blood").CreateInstance(), 10000);

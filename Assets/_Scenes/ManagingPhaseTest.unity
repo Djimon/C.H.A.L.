@@ -5293,7 +5293,7 @@ MonoBehaviour:
   - {fileID: 879869434}
   - {fileID: 1905612985}
   - {fileID: 1469157405}
-  currentPlayerLever: 3
+  currentPlayerLever: 20
 --- !u!1 &1306816758
 GameObject:
   m_ObjectHideFlags: 0

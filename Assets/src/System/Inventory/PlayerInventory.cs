@@ -1,118 +1,65 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static UnityEditor.Progress;
 
 [System.Serializable]
 public class PlayerInventory
 {
-    //private Dictionary<EItemType, object> itemContainers = new Dictionary<EItemType, object>();
-    private ItemContainer<Module> modulesContainer;
-    private ItemContainer<Remains> remainsContainer;
-    private ItemContainer<Rune> runesContainer;
+    private ItemContainer<Item> itemContainer;
+
 
     public PlayerInventory()
     {
-        // Hier können spezifische Kapazitätswerte pro Itemtyp festgelegt werden, wenn gewünscht
-        modulesContainer = new ItemContainer<Module>();   // Max. 10 Module
-        remainsContainer = new ItemContainer<Remains>();   // Keine Begrenzung
-        runesContainer = new ItemContainer<Rune>(30); //= 30 max known runes
+        itemContainer = new ItemContainer<Item>();
     }
 
-
-    public void AddItem<T>(EItemType itemType, T item) where T : Item
+    // Methode zum Hinzufügen eines Items
+    public void AddItem(Item item, int amount = 1)
     {
-        switch (itemType)
-        {
-            case EItemType.Module: modulesContainer.AddItem(item);
-                    break;
-            case EItemType.Remains: remainsContainer.AddItem(item); 
-                break;
-            case EItemType.Rune: runesContainer.AddItem(item);
-                break;
-            default: DebugManager.Warning($"Container for type {itemType} does not exists.", 2, "Items");
-                break;
-        }
-
+        itemContainer.AddItem(item, amount);
     }
 
-    public void RemoveItem<T>(EItemType itemType, T item) where T : Item
+    // Methode zum Entfernen eines Items
+    public void RemoveItem(Item item, int amount = 1)
     {
-        switch (itemType)
-        {
-            case EItemType.Module:
-                modulesContainer.RemoveItem(item);
-                break;
-            case EItemType.Remains:
-                remainsContainer.RemoveItem(item);
-                break;
-            case EItemType.Rune:
-                runesContainer.RemoveItem(item);
-                break;
-            default:
-                DebugManager.Warning($"Container for type {itemType} does not exists.", 2, "Items");
-                break;
-        }
-
+        itemContainer.RemoveItem(item, amount);
     }
 
-    public bool HasItem<T>(EItemType itemType, T item) where T : Item
+    public void RemoveItem(string itemName, int amount = 1)
     {
-        switch (itemType)
-        {
-            case EItemType.Module:
-                return modulesContainer != null && modulesContainer.HasItem(item);
-            case EItemType.Remains:
-                return remainsContainer != null && remainsContainer.HasItem(item);
-            case EItemType.Rune:
-                return runesContainer != null && runesContainer.HasItem(item);
-            default:
-                DebugManager.Warning($"Container for type {itemType} does not exists.", 2, "Items");
-                return false;
-        }
-
+        itemContainer.RemoveItem(itemName, amount);
     }
 
+
+    // Methode zum Überprüfen, ob ein bestimmtes Item vorhanden ist
+    public bool HasItem(Item item)
+    {
+        return itemContainer.HasItem(item);
+    }
+
+    // Methode, um Items eines bestimmten Typs zu filtern (z.B. Remains)
+    public List<Item> GetItemsByType(EItemType type) 
+    {
+        return itemContainer.GetAllItems()
+                            .Where(slot => slot.Item.itemType == type)
+                            .Select(slot => slot.Item as Item)
+                            .ToList();
+    }
+
+    public List<ItemSlot> GetItemsByTypeWithAmount(EItemType type)
+    {
+        return itemContainer.GetAllItems()
+                            .Where(slot => slot.Item.itemType == type)  // Filtert nach EItemType
+                            .ToList();  // Gibt eine Liste von ItemSlots zurück
+    }
+
+    // Gesamtzahl eines bestimmten Items holen
     public int GetItemCount(string itemName)
     {
-        int count = modulesContainer.GetItemAmount(itemName);
-
-        if (count == 0)
-        {
-            count = remainsContainer.GetItemAmount(itemName);
-        }
-
-        if (count == 0)
-        {
-            count = runesContainer.GetItemAmount(itemName);
-        }
-
-        return count;
+        return itemContainer.GetItemAmount(itemName);
     }
 
-    internal void RemoveItem(string itemName)
-    {
-        modulesContainer.RemoveItem(itemName);
-        remainsContainer.RemoveItem(itemName);
-        runesContainer.RemoveItem(itemName);
-    }
-
-    public ItemContainer<T> GetContainer<T>(EItemType itemType) where T : Item
-    {
-        switch (itemType)
-        {
-            case EItemType.Module:
-                return modulesContainer as ItemContainer<T>;
-            case EItemType.Remains:
-                return remainsContainer as ItemContainer<T>;
-            case EItemType.Rune:
-                return runesContainer as ItemContainer<T>; ;
-            default:
-                DebugManager.Warning($"Container for type {itemType} does not exists.", 2, "Items");
-                return null;
-        }
-    }
-
-    
 }

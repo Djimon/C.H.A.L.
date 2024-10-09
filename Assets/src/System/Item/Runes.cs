@@ -17,6 +17,7 @@ public class Rune : Item
         RuneID = runeID;
         Element = element;
         Level = level;
+        itemType = EItemType.Rune;
     }
 
     public override string GetItemDetails()

@@ -23,7 +23,35 @@ public class GameManager : MonoBehaviour
     private InventoryManager inventoryManager;
     private LootSystem lootSystem;
     private ConfigurationLoader configurationLoader;
+    private ItemRegistry itemRegistry;
 
+    private void OnEnable()
+    {
+        //Fertige Events abonieren
+        EventManager.OnUnitKilled += UpdateUnitKilled;
+
+        //Beispiel-Events abonnieren
+        EventManager.OnBossKilled += UpdateBossKilled;
+        EventManager.OnDistanceTraveled += UpdateDistanceTraveled;
+        EventManager.OnLootCollected += UpdateLootCollected;
+        EventManager.OnLevelUp += UpdateLevelUp;
+        EventManager.OnGamePlayed += UpdateGamePlayed;
+        EventManager.OnSpellCast += UpdateSpellCast;
+    }
+
+    private void OnDisable()
+    {
+        //fertige Ebents abbestellen
+        EventManager.OnUnitKilled -= UpdateUnitKilled;
+
+        //Beispiel-Events abbestellen
+        EventManager.OnBossKilled -= UpdateBossKilled;
+        EventManager.OnDistanceTraveled -= UpdateDistanceTraveled;
+        EventManager.OnLootCollected -= UpdateLootCollected;
+        EventManager.OnLevelUp -= UpdateLevelUp;
+        EventManager.OnGamePlayed -= UpdateGamePlayed;
+        EventManager.OnSpellCast -= UpdateSpellCast;
+    }
 
     private void Awake()
     {
@@ -42,6 +70,7 @@ public class GameManager : MonoBehaviour
         inventoryManager = GetComponent<InventoryManager>();
         lootSystem = GetComponent<LootSystem>();
         configurationLoader = GetComponent<ConfigurationLoader>();
+        itemRegistry = GetComponent<ItemRegistry>();
         gameData = saveSystem.LoadGameData();
 
         LocalisationManager.Initiliaize();
@@ -49,13 +78,22 @@ public class GameManager : MonoBehaviour
 
     public void Start()
     {
+        int startreward = 0;
         //TODO: For each registered player
+        if (!DebugManager.ProductiveMode)
+        {
+            startreward = 10000;
+            DebugManager.Error($"READ CARFULLY: for test reasons there a {startreward} added to each. XP, Golf and Crystals!");
+        }
+
         centralBank.CreatePlayerCurrencies(1);
-        centralBank.AddCurrencyForPLayer(1, "XP", ECurrencyType.reward);
-        centralBank.AddCurrencyForPLayer(1, "Gold", ECurrencyType.money, 100);
-        centralBank.AddCurrencyForPLayer(1, "Seelenkristalle", ECurrencyType.special, 0, 1000);
+        centralBank.AddCurrencyForPLayer(1, "XP", ECurrencyType.reward, startreward);
+        centralBank.AddCurrencyForPLayer(1, "Gold", ECurrencyType.money, startreward);
+        centralBank.AddCurrencyForPLayer(1, "Seelenkristalle", ECurrencyType.special, startreward, 1000);
 
         inventoryManager.CreatePlayerInventory(1);
+
+        CreateTestingStartinventory();
 
         gameData.gamestartet = true;
         gameData.PlayerID = 1;
@@ -84,32 +122,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void OnEnable()
+    private void CreateTestingStartinventory()
     {
-        //Fertige Events abonieren
-        EventManager.OnUnitKilled += UpdateUnitKilled;
-
-        //Beispiel-Events abonnieren
-        EventManager.OnBossKilled += UpdateBossKilled;
-        EventManager.OnDistanceTraveled += UpdateDistanceTraveled;
-        EventManager.OnLootCollected += UpdateLootCollected;
-        EventManager.OnLevelUp += UpdateLevelUp;
-        EventManager.OnGamePlayed += UpdateGamePlayed;
-        EventManager.OnSpellCast += UpdateSpellCast;
-    }
-
-    private void OnDisable()
-    {
-        //fertige Ebents abbestellen
-        EventManager.OnUnitKilled -= UpdateUnitKilled;
-
-        //Beispiel-Events abbestellen
-        EventManager.OnBossKilled -= UpdateBossKilled;
-        EventManager.OnDistanceTraveled -= UpdateDistanceTraveled;
-        EventManager.OnLootCollected -= UpdateLootCollected;
-        EventManager.OnLevelUp -= UpdateLevelUp;
-        EventManager.OnGamePlayed -= UpdateGamePlayed;
-        EventManager.OnSpellCast -= UpdateSpellCast;
+        inventoryManager.AddItemForPlayer(1, itemRegistry.GetItemByName("glitter_dust").CreateInstance(), 10000);
+        inventoryManager.AddItemForPlayer(1, itemRegistry.GetItemByName("ashes").CreateInstance(), 10000);
+        inventoryManager.AddItemForPlayer(1, itemRegistry.GetItemByName("blood").CreateInstance(), 10000);
     }
 
     private void UpdateUnitKilled(Unit unit, MonsterData victim)

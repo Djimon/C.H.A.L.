@@ -57,31 +57,12 @@ public class UI_InventoryManager : MonoBehaviour
 
         ActiveInventories = 0;
 
-        // Item-Kästchen generieren und hinzufügen
-        if (currentItemType == EItemType.Module)
+        var container = playerInventory.GetItemsByTypeWithAmount(currentItemType);
+        foreach (ItemSlot slot in container)
         {
-            var container = playerInventory.GetContainer<Module>(currentItemType);
-            foreach (var module in container.GetAllItems())
-            {
-                CreateOrUpdateItemBox(module); // Name des Moduls anzeigen
-            }
+            CreateOrUpdateItemBox(slot); // Name des Moduls anzeigen
         }
-        else if (currentItemType == EItemType.Remains)
-        {
-            var container = playerInventory.GetContainer<Remains>(currentItemType);
-            foreach (var remains in container.GetAllItems())
-            {
-                CreateOrUpdateItemBox(remains); // Name des Remains anzeigen
-            }
-        }
-        else if (currentItemType == EItemType.Rune)
-        {
-            var container = playerInventory.GetContainer<Rune>(currentItemType);
-            foreach (var rune in container.GetAllItems())
-            {
-                CreateOrUpdateItemBox(rune); // Name der Rune anzeigen
-            }
-        }
+
     }
 
     private void CreateOrUpdateItemBox(ItemSlot itemSlot)
@@ -99,12 +80,12 @@ public class UI_InventoryManager : MonoBehaviour
             pooledInventory.Add(newItem);
         }
 
-        UpdateItemBoc(itemSlot, newItem);
+        UpdateItemBox(itemSlot, newItem);
 
         ActiveInventories++;
     }
 
-    private static void UpdateItemBoc(ItemSlot itemSlot, GameObject newItem)
+    private static void UpdateItemBox(ItemSlot itemSlot, GameObject newItem)
     {
         // Finde die Image-Komponente im Prefab
         Image itemImage = newItem.GetComponentInChildren<Image>();

@@ -10,6 +10,8 @@ public abstract class Item
 
     public int globalItemID;
 
+    public EItemType itemType {  get; set; }
+
     // Abstract method to get detailed info about the item
     public abstract string GetItemDetails();
 

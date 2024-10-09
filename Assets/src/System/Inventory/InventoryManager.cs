@@ -51,12 +51,12 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    public void AddItemForPlayer(int playerID, Item item)
+    public void AddItemForPlayer(int playerID, Item item, int amount = 1)
     {
         if (playerInventoryDict.ContainsKey(playerID))
         {
-            playerInventoryDict[playerID].AddItem(item.GetItemType(), item);
-            DebugManager.Log($"{item.Name} was added to Player {playerID}", 3, "Items");
+            playerInventoryDict[playerID].AddItem(item, amount);
+            DebugManager.Log($"{amount} {item.Name} was added to Player {playerID}", 3, "Items");
             UpdateInventoryHelper();
         }
     }
@@ -65,7 +65,7 @@ public class InventoryManager : MonoBehaviour
     {
         if (playerInventoryDict.ContainsKey(playerID))
         {
-            playerInventoryDict[playerID].RemoveItem(item.GetItemType(), item);
+            playerInventoryDict[playerID].RemoveItem(item);
             UpdateInventoryHelper();
         }
     }
@@ -83,7 +83,7 @@ public class InventoryManager : MonoBehaviour
     {
         if (playerInventoryDict.ContainsKey(playerID))
         {
-            return playerInventoryDict[playerID].HasItem(item.GetItemType(), item);
+            return playerInventoryDict[playerID].HasItem(item);
         }
 
         return false;

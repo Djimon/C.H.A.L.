@@ -31,6 +31,7 @@ public class Module : Item
         Image = image;
         Anchor = anchor;
         Size = size;
+        itemType = EItemType.Module;
     }
 
     // Implementing the abstract method

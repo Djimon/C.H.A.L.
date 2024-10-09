@@ -26,7 +26,8 @@ public class Currency
     {
         CurrencyName = currencyName;
         CurrencyType = currencyType;
-        Balance = initialAmount;
+        //make sure that MaxCapacity hold during constructing
+        Balance = maxAmount>0? Mathf.Min(initialAmount,maxAmount): initialAmount;
         MaxCapacity = maxAmount;
         hasCapcity = maxAmount > 0;
     }

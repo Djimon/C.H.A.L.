@@ -31,7 +31,7 @@ public class PlayerCurrencies
 
         if (rest > 0)
         {
-            //TODO: Do somthing with the rest, e.g. Lokc in Tresor
+            //TODO: Do somthing with the rest, e.g. Lock in Tresor
             DebugManager.Log($"max Capacity of {currencyName} reached. rest of {rest} is gone!",2,"Info");
         }
     }

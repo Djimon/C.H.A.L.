@@ -21,6 +21,7 @@ public class Remains : Item
         DNAValue = dnaValue;
         SellValue = sellValue;
         ExchangeCost = exchangeCost;   
+        itemType = EItemType.Remains;
     }
 
     // Implementing the abstract method
